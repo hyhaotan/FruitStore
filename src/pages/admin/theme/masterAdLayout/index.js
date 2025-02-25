@@ -1,6 +1,6 @@
 import { memo } from "react";
 import Footer from "../../../common/footer";
-import { ROUTER } from "utils/router";
+import { ROUTER } from "utils/router.js";
 import { useLocation } from "react-router-dom";
 import HeaderAd from "../header";
 

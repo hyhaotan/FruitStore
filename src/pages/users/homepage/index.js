@@ -1,7 +1,6 @@
 import { memo, useEffect, useState } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-// import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "./style.scss";
 
 import cat1Img from "assets/users/images/categories/cat1.jpg";
@@ -12,7 +11,7 @@ import cat5Img from "assets/users/images/categories/cat5.jpg";
 
 import banner1 from "assets/users/images/banner/banner1.jpg";
 import banner2 from "assets/users/images/banner/banner2.jpg";
-import { ProductCard } from "component";
+import ProductCard from "component/ProductCard";
 import axios from "axios";
 
 const HomePage = () => {
@@ -51,6 +50,7 @@ const HomePage = () => {
         {products.map((item) => (
           <div className="col-lg-3 col-md-4 col-sm-6 col-xs-12" key={item._id}>
             <ProductCard
+              id={item._id}
               name={item.name}
               image={item.image}
               price={item.price}

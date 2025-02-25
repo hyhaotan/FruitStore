@@ -74,7 +74,7 @@ const renderAdminRouter = () => {
 };
 
 const RouterCustom = () => {
-  const location =useLocation();
+  const location = useLocation();
   const isAdminRouters = location.pathname.startsWith(ADMIN_PATH);
   return isAdminRouters ? renderAdminRouter() : renderUserRouter();
 };

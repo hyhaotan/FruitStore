@@ -1,13 +1,49 @@
-import { memo } from "react";
+import { useEffect, useState, memo } from "react";
 import Breadcrumb from "../theme/breadcrumb";
 import "./style.scss";
 import { formater } from "utils/formater";
-import { Quantity } from "component";
+import Quantity from "component/Quantity"; // đảm bảo đường dẫn chính xác
 import { AiOutlineClose } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { ROUTER } from "utils/router";
+import axios from "axios";
+
 const ShoppingCartPage = () => {
   const navigate = useNavigate();
+  const [cartItems, setCartItems] = useState([]);
+
+  useEffect(() => {
+    const fetchCart = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/carts");
+        setCartItems(response.data);
+      } catch (error) {
+        console.error("Lỗi khi lấy giỏ hàng:", error);
+      }
+    };
+
+    fetchCart();
+  }, []);
+
+  // Hàm cập nhật cart item khi số lượng thay đổi
+  const handleQuantityChange = (updatedItem) => {
+    setCartItems((prevItems) =>
+      prevItems.map((item) =>
+        item._id === updatedItem._id ? updatedItem : item
+      )
+    );
+  };
+
+  // Tính tổng đơn hàng dựa trên đơn giá và số lượng
+  const totalPrice = cartItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+  const totalQuantity = cartItems.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
+
   return (
     <>
       <Breadcrumb name="Giỏ hàng" />
@@ -17,27 +53,43 @@ const ShoppingCartPage = () => {
             <thead>
               <tr>
                 <th>Tên</th>
-                <th>Giá</th>
+                <th>Đơn giá</th>
                 <th>Số lượng</th>
                 <th>Thành tiền</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="shopping_cart_item">
-                  <img src="https://via.placeholder.com/50" alt="product-pic" />
-                  <h4>Tên sản phẩm 1</h4>
-                </td>
-                <td>{formater(200000)}</td>
-                <td>
-                  <Quantity quantity="2" hasAddToCart={false} />
-                </td>
-                <td>{formater(400000)}</td>
-                <td className="icon_close">
-                  <AiOutlineClose />
-                </td>
-              </tr>
+              {cartItems.length > 0 ? (
+                cartItems.map((item) => (
+                  <tr key={item._id}>
+                    <td className="shopping_cart_item">
+                      <img src={item.image} alt="product-pic" width="50" />
+                      <h4>{item.name}</h4>
+                    </td>
+                    <td>{formater(item.price)}</td>
+                    <td>
+                      <Quantity
+                        initialQuantity={item.quantity}
+                        id={item._id} // truyền ID của cart item
+                        onQuantityChange={(newQuantity) => {
+                          // Cập nhật lại state của ShoppingCartPage nếu cần
+                          // Ví dụ: cập nhật item.quantity hoặc gọi lại API lấy cart mới
+                        }}
+                        hasAddToCart={false}
+                      />
+                    </td>
+                    <td>{formater(item.price * item.quantity)}</td>
+                    <td className="icon_close">
+                      <AiOutlineClose style={{ cursor: "pointer" }} />
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5">Giỏ hàng trống</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -58,10 +110,10 @@ const ShoppingCartPage = () => {
               <h2>Tổng đơn:</h2>
               <ul>
                 <li>
-                  Số lượng: <span>{2}</span>
+                  Số lượng: <span>{totalQuantity}</span>
                 </li>
                 <li>
-                  Thành tiền: <span>{formater(200000)}</span>
+                  Thành tiền: <span>{formater(totalPrice)}</span>
                 </li>
               </ul>
               <button
