@@ -48,30 +48,72 @@ const addCart = async (req, res) => {
 };
 
 const updateCartItem = async (req, res) => {
-  try {
-    const { id } = req.params; // Lấy id của cart item từ URL
-    const { quantity } = req.body;
+  const { id } = req.params;
+  const { quantity } = req.body;
 
-    // Tìm cart item theo id
-    const cartItem = await Cart.findById(id);
-    if (!cartItem) {
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid cart item ID" });
+    }
+
+    const existingCartItem = await Cart.findById(id);
+    if (!existingCartItem) {
       return res.status(404).json({ message: "Cart item not found" });
     }
 
-    // Kiểm tra số lượng hợp lệ (>= 1)
-    if (quantity < 1) {
-      return res.status(400).json({ message: "Quantity must be at least 1" });
-    }
+    const newQuantity =
+      quantity !== undefined
+        ? parseInt(quantity, 10)
+        : existingCartItem.quantity;
 
-    // Cập nhật số lượng và lưu lại thay đổi
-    cartItem.quantity = quantity;
-    const updatedItem = await cartItem.save();
+    const updatedCartItem = await Cart.findByIdAndUpdate(
+      id,
+      {
+        quantity: newQuantity,
+      },
+      { new: true }
+    );
 
-    res.status(200).json(updatedItem);
+    res.status(200).json(updatedCartItem);
   } catch (error) {
     console.error("Error updating cart item:", error);
     res.status(500).json({ message: "Error updating cart item", error });
   }
 };
 
-module.exports = { getCart, addCart, updateCartItem };
+const deleteCartItem = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deletedCartItem = await Cart.findByIdAndDelete(id);
+    if (!deletedCartItem) {
+      return res.status(404).send({ message: "Cart item not found" });
+    }
+    res.status(200).json({ message: "Cart item deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting cart item:", error);
+    res.status(500).json({ message: "Error deleting cart item", error });
+  }
+};
+
+const clearCart = async (req, res) => {
+  try {
+    const deletedCartItems = await Cart.deleteMany({});
+
+    if (deletedCartItems.deletedCount === 0) {
+      return res.status(404).send({ message: "No items in cart to delete" });
+    }
+
+    res.status(200).json({ message: "All cart items deleted successfully" });
+  } catch (error) {
+    console.error("Error clearing cart:", error);
+    res.status(500).json({ message: "Error clearing cart", error });
+  }
+};
+
+module.exports = {
+  getCart,
+  addCart,
+  updateCartItem,
+  deleteCartItem,
+  clearCart,
+};

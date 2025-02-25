@@ -2,7 +2,7 @@ import { useEffect, useState, memo } from "react";
 import Breadcrumb from "../theme/breadcrumb";
 import "./style.scss";
 import { formater } from "utils/formater";
-import Quantity from "component/Quantity"; // đảm bảo đường dẫn chính xác
+import Quantity from "component/Quantity";
 import { AiOutlineClose } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { ROUTER } from "utils/router";
@@ -25,11 +25,30 @@ const ShoppingCartPage = () => {
     fetchCart();
   }, []);
 
-  // Hàm cập nhật cart item khi số lượng thay đổi
-  const handleQuantityChange = (updatedItem) => {
+  // Hàm xóa sản phẩm khỏi giỏ hàng
+  const handleDeleteItem = async (id) => {
+    if (
+      window.confirm(
+        "Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng không?"
+      )
+    ) {
+      try {
+        await axios.delete(`http://localhost:5000/api/carts/${id}`);
+        // Cập nhật lại state: loại bỏ sản phẩm đã xóa
+        setCartItems((prevItems) =>
+          prevItems.filter((item) => item._id !== id)
+        );
+      } catch (error) {
+        console.error("Lỗi khi xóa sản phẩm khỏi giỏ hàng:", error);
+      }
+    }
+  };
+
+  // Cập nhật lại số lượng của một cart item khi thay đổi từ component Quantity
+  const handleQuantityChange = (id, newQuantity) => {
     setCartItems((prevItems) =>
       prevItems.map((item) =>
-        item._id === updatedItem._id ? updatedItem : item
+        item._id === id ? { ...item, quantity: newQuantity } : item
       )
     );
   };
@@ -72,16 +91,18 @@ const ShoppingCartPage = () => {
                       <Quantity
                         initialQuantity={item.quantity}
                         id={item._id} // truyền ID của cart item
-                        onQuantityChange={(newQuantity) => {
-                          // Cập nhật lại state của ShoppingCartPage nếu cần
-                          // Ví dụ: cập nhật item.quantity hoặc gọi lại API lấy cart mới
-                        }}
+                        onQuantityChange={(newQuantity) =>
+                          handleQuantityChange(item._id, newQuantity)
+                        }
                         hasAddToCart={false}
                       />
                     </td>
                     <td>{formater(item.price * item.quantity)}</td>
                     <td className="icon_close">
-                      <AiOutlineClose style={{ cursor: "pointer" }} />
+                      <AiOutlineClose
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleDeleteItem(item._id)}
+                      />
                     </td>
                   </tr>
                 ))

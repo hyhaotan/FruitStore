@@ -7,6 +7,7 @@ dotenv.config();
 
 const cartRoutes = require("./router/cart");
 const productRoutes = require("./router/product");
+const paymentRoutes = require("./router/payment");
 
 const app = express();
 
@@ -25,6 +26,7 @@ mongoose
 // Sử dụng các router với tiền tố "/api"
 app.use(productRoutes);
 app.use(cartRoutes);
+app.use(paymentRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

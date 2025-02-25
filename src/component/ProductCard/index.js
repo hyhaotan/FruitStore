@@ -40,7 +40,9 @@ const ProductCard = ({ id, image, name, price }) => {
       </div>
       <div className="featured_item_text">
         <h6>
-          <Link to={generatePath(ROUTER.USER.PRODUCT, { id })}>{name}</Link>
+          <Link to={id ? generatePath(ROUTER.USER.PRODUCT, { id }) : "#"}>
+            {name}
+          </Link>
         </h6>
         <h5>{formater(price)}</h5>
       </div>
