@@ -10,6 +10,8 @@ import CheckoutPage from "pages/users/checkoutPage";
 import LoginAdPage from "pages/admin/loginPage";
 import OrderPageAdPage from "pages/admin/orderPage";
 import MasterAdLayout from "pages/admin/theme/masterAdLayout";
+import LoginUserPage from "pages/users/login";
+import Register from "pages/users/register";
 
 const renderUserRouter = () => {
   const userRouters = [
@@ -36,6 +38,14 @@ const renderUserRouter = () => {
     {
       path: ROUTER.USER.CHECKOUT,
       component: <CheckoutPage />,
+    },
+    {
+      path: ROUTER.USER.LOGIN,
+      component: <LoginUserPage />,
+    },
+    {
+      path: ROUTER.USER.REGISTER,
+      component: <Register />,
     },
   ];
 

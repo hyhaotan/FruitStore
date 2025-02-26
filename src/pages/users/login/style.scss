@@ -1,0 +1,89 @@
+@use "sass:map";
+@import "style/pages/all";
+
+.login {
+  .login_title {
+    text-align: center;
+  }
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+
+  input {
+    width: calc(100% - 10px);
+  }
+
+  &_container {
+    background: #fff;
+    width: 400px;
+    min-height: 300px;
+    padding: 32px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  &_title {
+    font-weight: 600;
+    color: map.get($theme-colors, "normal-text");
+    margin-bottom: 24px;
+  }
+
+  &_form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  &_form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &_label {
+    font-size: 14px;
+    font-weight: 500;
+    color: map.get($theme-colors, "normal-text");
+  }
+
+  &_button {
+    height: 46px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+    background: map.get($theme-colors, "main");
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+  }
+
+  &_register {
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+
+    p {
+      margin: 0;
+      font-size: 14px;
+      color: map.get($theme-colors, "normal-text");
+    }
+
+    .register_button {
+      font-size: 14px;
+      font-weight: 600;
+      color: map.get($theme-colors, "main");
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: darken(map.get($theme-colors, "main"), 10%);
+      }
+    }
+  }
+}

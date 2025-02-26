@@ -1,5 +1,5 @@
 // Header.jsx
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import "./style.scss";
 import {
   AiOutlineShoppingCart,
@@ -18,6 +18,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { formater } from "utils/formater";
 import { ROUTER } from "utils/router";
 import { BiUser } from "react-icons/bi";
+import UserModal from "component/UserModal";
 
 export const categories = [
   "Thịt tươi",
@@ -30,18 +31,14 @@ export const categories = [
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const loginRef = useRef(null);
+
   const [isShowHumberger, setShowHumberger] = useState(false);
   const [isHome, setIsHome] = useState(location.pathname.length <= 1);
   const [isShowCategories, setShowCategories] = useState(isHome);
   const [menus, setMenus] = useState([
-    {
-      name: "Trang chủ",
-      path: ROUTER.USER.HOME,
-    },
-    {
-      name: "Cửa hàng",
-      path: ROUTER.USER.PRODUCTS,
-    },
+    { name: "Trang chủ", path: ROUTER.USER.HOME },
+    { name: "Cửa hàng", path: ROUTER.USER.PRODUCTS },
     {
       name: "Sản phẩm",
       path: "#",
@@ -52,15 +49,18 @@ const Header = () => {
         { name: "Thức ăn nhanh", path: "#" },
       ],
     },
-    {
-      name: "Bài viết",
-      path: ROUTER.USER.HOME,
-    },
-    {
-      name: "Liên hệ",
-      path: ROUTER.USER.HOME,
-    },
+    { name: "Bài viết", path: ROUTER.USER.HOME },
+    { name: "Liên hệ", path: ROUTER.USER.HOME },
   ]);
+
+  // Lấy thông tin người dùng từ localStorage nếu có
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
+
+  // State điều khiển modal hiển thị dưới phần tên đăng nhập
+  const [showUserModal, setShowUserModal] = useState(false);
 
   useEffect(() => {
     const isHome = location.pathname.length <= 1;
@@ -68,8 +68,16 @@ const Header = () => {
     setShowCategories(isHome);
   }, [location]);
 
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setUser(null);
+    setShowUserModal(false);
+    navigate(ROUTER.USER.LOGIN);
+  };
+
   return (
     <>
+      {/* Menu Hamburger (cho responsive mobile) */}
       <div
         className={`humberger_menu_overlay ${isShowHumberger ? "active" : ""}`}
         onClick={() => setShowHumberger(false)}
@@ -94,31 +102,37 @@ const Header = () => {
         </div>
         <div className="humberger_menu_widget">
           <div className="header_top_right_auth">
-            <Link to={""}>
-              <BiUser /> Đăng nhập
-            </Link>
+            {user ? (
+              <div
+                className="user_menu_container"
+                onClick={() => setShowUserModal(true)}
+              >
+                <BiUser /> {user.username}
+              </div>
+            ) : (
+              <Link to={ROUTER.USER.LOGIN}>
+                <BiUser /> Đăng nhập
+              </Link>
+            )}
           </div>
         </div>
         <div className="humberger_menu_nav">
           <ul>
             {menus.map((menu, menukey) => (
-              <li key={menukey} to={menu.path}>
+              <li key={menukey}>
                 <Link
                   to={menu.path}
                   onClick={() => {
                     const newMenus = [...menus];
-                    newMenus[menukey].isShowSubmenu =
-                      !newMenus[menukey].isShowSubmenu;
-                    setMenus(newMenus);
+                    if (menu.child) {
+                      newMenus[menukey].isShowSubmenu =
+                        !newMenus[menukey].isShowSubmenu;
+                      setMenus(newMenus);
+                    }
                   }}
                 >
                   {menu.name}
-                  {menu.child &&
-                    (menu.isShowSubmenu ? (
-                      <AiOutlineDownCircle />
-                    ) : (
-                      <AiOutlineDownCircle />
-                    ))}
+                  {menu.child && <AiOutlineDownCircle />}
                 </Link>
                 {menu.child && (
                   <ul
@@ -154,7 +168,6 @@ const Header = () => {
         <div className="humberger_menu_contact">
           <ul>
             <li>
-              {" "}
               <MdEmail /> fruitstore@gmail.com
             </li>
             <li>Miễn phí đơn từ {formater(2000000)}</li>
@@ -162,6 +175,7 @@ const Header = () => {
         </div>
       </div>
 
+      {/* Header Top (desktop) */}
       <div className="header_top">
         <div className="container">
           <div className="row">
@@ -195,15 +209,27 @@ const Header = () => {
                     <AiOutlineTwitter />
                   </Link>
                 </li>
-                <li onClick={() => navigate(ROUTER.ADMIN.LOGIN)}>
+                <li
+                  className="user_menu_container"
+                  ref={loginRef}
+                  onClick={() => {
+                    if (user) {
+                      setShowUserModal(!showUserModal);
+                    } else {
+                      navigate(ROUTER.USER.LOGIN);
+                    }
+                  }}
+                >
                   <AiOutlineUser />
-                  <span>Đăng nhập</span>
+                  <span>{user ? user.username : "Đăng nhập"}</span>
                 </li>
               </ul>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Header Main */}
       <div className="container">
         <div className="row">
           <div className="col-lg-3">
@@ -220,7 +246,7 @@ const Header = () => {
                     {menu.child && (
                       <ul className="header_menu_dropdown">
                         {menu.child.map((childItem, childKey) => (
-                          <li key={`${menuKey} -${childKey}`}>
+                          <li key={`${menuKey}-${childKey}`}>
                             <Link to={childItem.path}>{childItem.name}</Link>
                           </li>
                         ))}
@@ -246,15 +272,13 @@ const Header = () => {
               </ul>
             </div>
             <div className="humberger_open">
-              <AiOutlineMenu
-                onClick={() => {
-                  setShowHumberger(true);
-                }}
-              />
+              <AiOutlineMenu onClick={() => setShowHumberger(true)} />
             </div>
           </div>
         </div>
       </div>
+
+      {/* Hero Section */}
       <div className="container">
         <div className="row hero_categories_container">
           <div className="col-lg-3 col-md-12 col-sm-12 col-xs-12 hero_categories">
@@ -267,7 +291,7 @@ const Header = () => {
             </div>
             <ul className={isShowCategories ? "" : "hidden"}>
               {categories.map((category, key) => (
-                <li>
+                <li key={key}>
                   <Link to={ROUTER.USER.PRODUCTS}>{category}</Link>
                 </li>
               ))}
@@ -277,12 +301,7 @@ const Header = () => {
             <div className="hero_search">
               <div className="hero_search_form">
                 <form>
-                  <input
-                    type="text"
-                    name=""
-                    value=""
-                    placeholder="Bạn đang tìm gì?"
-                  />
+                  <input type="text" placeholder="Bạn đang tìm gì?" />
                   <button type="submit">Tìm kiếm</button>
                 </form>
               </div>
@@ -314,6 +333,14 @@ const Header = () => {
           </div>
         </div>
       </div>
+
+      {user && showUserModal && (
+        <UserModal
+          targetRef={loginRef}
+          onClose={() => setShowUserModal(false)}
+          onLogout={handleLogout}
+        />
+      )}
     </>
   );
 };
