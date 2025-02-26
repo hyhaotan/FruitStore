@@ -38,7 +38,6 @@ const CheckoutPage = () => {
 
   // Hàm xử lý thanh toán
   const handlePaymentSubmit = async () => {
-    // Kiểm tra thông tin khách hàng có đầy đủ không
     if (!customerName || !address || !phone || !email) {
       alert("Vui lòng nhập đầy đủ thông tin khách hàng.");
       return;
@@ -49,8 +48,6 @@ const CheckoutPage = () => {
       alert("Giỏ hàng trống!");
       return;
     }
-
-    // Chuẩn bị dữ liệu gửi lên server. Lưu ý: bên backend, trường 'phone' sẽ được ánh xạ sang 'phonenumber'
     const payload = {
       cartItems,
       paymentMethod,

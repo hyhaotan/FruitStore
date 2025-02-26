@@ -33,6 +33,11 @@ const UserModal = ({ targetRef, onClose, onLogout }) => {
               Profile
             </Link>
           </li>
+          <li>
+            <Link to={ROUTER.USER.ORDER} onClick={onClose}>
+              Lịch sử đơn hàng
+            </Link>
+          </li>
           <li onClick={onLogout}>Logout</li>
         </ul>
       </div>

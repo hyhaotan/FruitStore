@@ -13,7 +13,19 @@ const getCart = async (req, res) => {
 const addCart = async (req, res) => {
   console.log("Request body:", req.body);
   try {
+    // Destructure các trường cần thiết từ req.body
     const { productId, quantity, name, price, image } = req.body;
+
+    // Kiểm tra dữ liệu bắt buộc
+    if (!productId || !quantity || !name || !price || !image) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    // Chuyển đổi quantity sang kiểu số (nếu chưa phải)
+    const numericQuantity = Number(quantity);
+    if (isNaN(numericQuantity) || numericQuantity < 1) {
+      return res.status(400).json({ message: "Invalid quantity" });
+    }
 
     // Kiểm tra xem sản phẩm có tồn tại trong Product model không
     const product = await Product.findById(productId);
@@ -21,11 +33,11 @@ const addCart = async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    // Kiểm tra xem sản phẩm đã có trong giỏ hàng hay chưa
+    // Kiểm tra xem sản phẩm đã có trong giỏ hàng hay chưa (sử dụng productId)
     let existingCartItem = await Cart.findOne({ productId });
     if (existingCartItem) {
       // Nếu đã tồn tại, cập nhật số lượng
-      existingCartItem.quantity += quantity;
+      existingCartItem.quantity += numericQuantity;
       const updatedItem = await existingCartItem.save();
       return res.status(200).json(updatedItem);
     }
@@ -36,14 +48,16 @@ const addCart = async (req, res) => {
       name,
       price,
       image,
-      quantity,
+      quantity: numericQuantity,
     });
 
     const savedItem = await cartItem.save();
-    res.status(201).json(savedItem);
+    return res.status(201).json(savedItem);
   } catch (error) {
     console.error("Error adding to cart:", error);
-    res.status(500).json({ message: "Error adding to cart", error });
+    return res
+      .status(500)
+      .json({ message: "Error adding to cart", error: error.message });
   }
 };
 
@@ -56,7 +70,7 @@ const updateCartItem = async (req, res) => {
       return res.status(400).json({ message: "Invalid cart item ID" });
     }
 
-    const existingCartItem = await Cart.findById(id);
+    const existingCartItem = await Cart.findOne({ productId: id });
     if (!existingCartItem) {
       return res.status(404).json({ message: "Cart item not found" });
     }
@@ -67,10 +81,8 @@ const updateCartItem = async (req, res) => {
         : existingCartItem.quantity;
 
     const updatedCartItem = await Cart.findByIdAndUpdate(
-      id,
-      {
-        quantity: newQuantity,
-      },
+      existingCartItem._id,
+      { quantity: newQuantity },
       { new: true }
     );
 

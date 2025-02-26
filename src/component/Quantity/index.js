@@ -4,11 +4,15 @@ import "./style.scss";
 
 const Quantity = ({
   initialQuantity = 1,
-  id, // ID của cart item, bắt buộc truyền vào để cập nhật đúng item trên server
-  onQuantityChange, // Callback nếu cần thông báo cho component cha
+  id,
+  onQuantityChange,
   hasAddToCart = true,
+  image,
+  name,
+  price,
 }) => {
   const [quantity, setQuantity] = useState(initialQuantity);
+  const [isAdding, setIsAdding] = useState(false);
 
   // Hàm cập nhật số lượng trên server
   const updateQuantityOnServer = async (newQuantity) => {
@@ -53,6 +57,30 @@ const Quantity = ({
     if (onQuantityChange) onQuantityChange(updatedQuantity);
   };
 
+  // Hàm xử lý thêm sản phẩm vào giỏ hàng
+  const handleAddCart = async () => {
+    if (isAdding) return; // Ngăn chặn gửi nhiều yêu cầu
+    setIsAdding(true);
+    try {
+      const response = await axios.post("http://localhost:5000/api/carts", {
+        productId: id,
+        name: name,
+        price: price,
+        image: image,
+        quantity: quantity, // Sử dụng số lượng hiện tại được chọn
+      });
+      alert("Sản phẩm đã được thêm vào giỏ hàng!");
+      console.log("Cart item:", response.data);
+    } catch (error) {
+      console.error("Lỗi khi thêm sản phẩm vào giỏ hàng:", error);
+      alert(
+        "Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng. Vui lòng thử lại sau."
+      );
+    } finally {
+      setIsAdding(false);
+    }
+  };
+
   return (
     <div className="quantity-container">
       <div className="quantity">
@@ -65,8 +93,13 @@ const Quantity = ({
         </span>
       </div>
       {hasAddToCart && (
-        <button type="submit" className="button-submit">
-          Thêm giỏ hàng
+        <button
+          type="submit"
+          className="button-submit"
+          onClick={handleAddCart}
+          disabled={isAdding}
+        >
+          {isAdding ? "Đang thêm..." : "Thêm giỏ hàng"}
         </button>
       )}
     </div>

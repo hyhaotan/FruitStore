@@ -1,4 +1,5 @@
 const Payment = require("../models/payment");
+const Product = require("../models/product");
 
 const getPayment = async (req, res) => {
   try {
@@ -67,4 +68,49 @@ const payment = async (req, res) => {
   }
 };
 
-module.exports = { getPayment, payment };
+const confirmOrder = async (req, res) => {
+  try {
+    const { paymentId } = req.params; // Lấy id đơn hàng từ URL
+
+    // Tìm đơn hàng theo id
+    const payment = await Payment.findById(paymentId);
+    if (!payment) {
+      return res.status(404).json({
+        success: false,
+        message: "Không tìm thấy đơn hàng",
+      });
+    }
+
+    // Kiểm tra trạng thái hiện tại của đơn hàng
+    if (payment.orderStatus === "received") {
+      return res.status(400).json({
+        success: false,
+        message: "Đơn hàng đã được xác nhận",
+      });
+    }
+
+    if (payment.orderStatus !== "not_received") {
+      return res.status(400).json({
+        success: false,
+        message: `Không thể xác nhận đơn hàng với trạng thái '${payment.orderStatus}'`,
+      });
+    }
+
+    // Cập nhật trạng thái đơn hàng thành "received"
+    payment.orderStatus = "received";
+    const updatedPayment = await payment.save();
+
+    res.json({
+      success: true,
+      message: "Đơn hàng đã được xác nhận là đã nhận hàng",
+      payment: updatedPayment,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+module.exports = { getPayment, payment, confirmOrder };

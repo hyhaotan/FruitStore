@@ -12,6 +12,7 @@ import OrderPageAdPage from "pages/admin/orderPage";
 import MasterAdLayout from "pages/admin/theme/masterAdLayout";
 import LoginUserPage from "pages/users/login";
 import Register from "pages/users/register";
+import OrderPage from "pages/users/orderPage";
 
 const renderUserRouter = () => {
   const userRouters = [
@@ -46,6 +47,10 @@ const renderUserRouter = () => {
     {
       path: ROUTER.USER.REGISTER,
       component: <Register />,
+    },
+    {
+      path: ROUTER.USER.ORDER,
+      component: <OrderPage />,
     },
   ];
 

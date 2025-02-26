@@ -13,7 +13,7 @@ import { formater } from "utils/formater";
 import { ProductCard, Quantity } from "component";
 import { featProducts } from "utils/common";
 
-const ProductsDetailPage = () => {
+const ProductsDetailPage = (name, image, price) => {
   // Lấy id sản phẩm từ URL
   const { id } = useParams();
 
@@ -54,8 +54,6 @@ const ProductsDetailPage = () => {
     return <div>Không có thông tin sản phẩm.</div>;
   }
 
-  // Nếu sản phẩm có thêm hình ảnh (có thể là một mảng, nếu API cung cấp),
-  // nếu không thì dùng hình ảnh chính của sản phẩm
   const additionalImages = product.additionalImages || [product.image];
 
   return (
@@ -88,9 +86,7 @@ const ProductsDetailPage = () => {
             <ul>
               <li>
                 <b>Tình trạng:</b>{" "}
-                <span>
-                  {product.status === "active" ? "Còn hàng" : "Hết hàng"}
-                </span>
+                <span>{product.quantity > 0 ? "Còn hàng" : "Hết hàng"}</span>
               </li>
               <li>
                 <b>Số lượng:</b> <span>{product.quantity}</span>

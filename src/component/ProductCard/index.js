@@ -31,7 +31,9 @@ const ProductCard = ({ id, image, name, price }) => {
       >
         <ul className="featured_item_pic_hover">
           <li>
-            <AiOutlineEye />
+            <Link to={id ? generatePath(ROUTER.USER.PRODUCT, { id }) : "#"}>
+              <AiOutlineEye />
+            </Link>
           </li>
           <li onClick={handleAddCart} style={{ cursor: "pointer" }}>
             <AiOutlineShoppingCart />
