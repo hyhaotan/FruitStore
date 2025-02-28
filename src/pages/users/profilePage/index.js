@@ -43,17 +43,17 @@ const ProfilePage = () => {
       // Gọi API dựa theo field cần cập nhật
       if (field === "username") {
         response = await axios.put(
-          `http://localhost:5000/api/users/editUsername/${storedUser.id}`,
+          `http://localhost:5000/api/users/editUsername/${storedUser._id}`,
           { username: profile.username }
         );
       } else if (field === "email") {
         response = await axios.put(
-          `http://localhost:5000/api/users/editEmail/${storedUser.id}`,
+          `http://localhost:5000/api/users/editEmail/${storedUser._id}`,
           { email: profile.email }
         );
       } else if (field === "password") {
         response = await axios.put(
-          `http://localhost:5000/api/users/editPassword/${storedUser.id}`,
+          `http://localhost:5000/api/users/editPassword/${storedUser._id}`,
           { password: profile.password }
         );
       }
@@ -91,7 +91,7 @@ const ProfilePage = () => {
         setLoading(true);
         try {
           const response = await axios.get(
-            `http://localhost:5000/api/users/profile/${storedUser.id}`
+            `http://localhost:5000/api/users/profile/${storedUser._id}`
           );
           setProfile({
             username: response.data.user.username,

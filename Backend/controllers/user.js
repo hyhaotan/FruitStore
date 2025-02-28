@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const mongoose = require("mongoose");
 
 const registerUser = async (req, res) => {
   const { email, username, password, confirmPassword } = req.body;

@@ -2,131 +2,122 @@ import { memo, useEffect, useState } from "react";
 import "./style.scss";
 import { formater } from "utils/formater";
 
-const STATUS = {
-  ORDERED: {
-    key: "ORDERED",
-    lable: "Đã đặt",
-    className: "orders_dropdown-item",
+const ORDER_STATUSES = {
+  not_received: {
+    key: "not_received",
+    label: "Chưa nhận hàng",
   },
-  PREPARING: {
-    key: "PREPARING",
-    lable: "Lên đơn",
-    className: "orders_dropdown-item",
+  received: {
+    key: "received",
+    label: "Đã nhận hàng",
   },
-  DIVIVERED: {
-    key: "DIVIVERED",
-    lable: "Đã giao hàng",
-    className: "orders_dropdown-item",
-  },
-  CANCELLED: {
-    key: "CANCELLED",
-    lable: "Hủy đơn",
-    className: "orders_dropdown-item orders_dropdown-item-danger",
+  canceled: {
+    key: "canceled",
+    label: "Đã hủy đơn",
   },
 };
 
-const OrderPage = () => {
-  const orders = [
-    {
-      id: 1,
-      total: 100000,
-      customerName: "John",
-      date: "2021-10-10",
-      status: "Đang lên đơn",
-    },
-    {
-      id: 2,
-      total: 100000,
-      customerName: "John",
-      date: "2021-10-10",
-      status: "Đang lên đơn",
-    },
-  ];
-
-  const [activedDropdown, setactivedDropdown] = useState(null);
+const PaymentTable = () => {
+  const [payments, setPayments] = useState([]);
+  const [activeDropdown, setActiveDropdown] = useState(null);
 
   useEffect(() => {
-    const handleClickOutsice = (event) => {
-      const isDropdown = event.target.closest(".orders_dropdown");
-      if (!isDropdown) {
-        setactivedDropdown(null);
+    const fetchPayments = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/payments");
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setPayments(data);
+      } catch (error) {
+        console.error("Error fetching payments:", error);
       }
     };
-    document.addEventListener("mousedown", handleClickOutsice);
-    return () => document.removeEventListener("mousedown", handleClickOutsice);
+
+    fetchPayments();
+
+    // Đóng dropdown khi click ra ngoài
+    const handleClickOutside = (event) => {
+      const isDropdown = event.target.closest(".orders__dropdown");
+      if (!isDropdown) {
+        setActiveDropdown(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
     <div className="container">
       <div className="orders">
-        <h2>Quản lý đơn hàng</h2>
-        <div className="orders_content">
-          <table className="orders_table">
+        <h2>Quản lý thanh toán</h2>
+        <div className="orders__content">
+          <table className="orders__table">
             <thead>
               <tr>
-                <th>Mã đơn hàng</th>
-                <th>Tổng đơn</th>
+                <th>Mã thanh toán</th>
+                <th>Tổng tiền</th>
+                <th>Phương thức</th>
+                <th>Trạng thái thanh toán</th>
+                <th>Trạng thái đơn hàng</th>
                 <th>Khách hàng</th>
                 <th>Ngày đặt</th>
-                <th>Trạng thái</th>
               </tr>
             </thead>
             <tbody>
-              {orders.map((item, i) => (
-                <tr key={i}>
+              {payments.map((payment) => (
+                <tr key={payment._id}>
+                  <td>{payment._id}</td>
+                  <td>{formater(payment.totalAmount)}</td>
+                  <td>{payment.paymentMethod}</td>
+                  <td>{payment.paymentStatus}</td>
                   <td>
-                    <span>{item.id}</span>
-                  </td>
-                  <td>{formater(item.total)}</td>
-                  <td>{item.customerName}</td>
-                  <td>{new Date(item.date).toLocaleDateString()}</td>
-                  <td>
-                    <div className="orders_dropdown">
+                    <div className="orders__dropdown">
                       <button
-                        className={`orders_action-button`}
-                        onClick={() => setactivedDropdown(item.id)}
+                        className="orders__action-button"
+                        onClick={() => setActiveDropdown(payment._id)}
                       >
-                        Đã đặt
+                        {ORDER_STATUSES[payment.orderStatus]
+                          ? ORDER_STATUSES[payment.orderStatus].label
+                          : payment.orderStatus}
                         <span className="arrow">▽</span>
                       </button>
-                      {activedDropdown === item.id && (
-                        <div className="orders_dropdown-menu">
-                          {Object.values(STATUS).map((status) => (
+                      {activeDropdown === payment._id && (
+                        <div className="orders__dropdown-menu">
+                          {Object.values(ORDER_STATUSES).map((status) => (
                             <button
                               key={status.key}
-                              className={status.className}
-                              onClick={() => setactivedDropdown(null)}
+                              className={
+                                status.key === "canceled"
+                                  ? "orders__dropdown-item orders__dropdown-item--danger"
+                                  : "orders__dropdown-item"
+                              }
+                              onClick={() => {
+                                // Thêm xử lý cập nhật trạng thái đơn hàng tại đây,
+                                // ví dụ gọi API để cập nhật payment.orderStatus
+                                setActiveDropdown(null);
+                              }}
                             >
-                              {status.lable}
+                              {status.label}
                             </button>
                           ))}
                         </div>
                       )}
                     </div>
                   </td>
+                  <td>{payment.customer?.name}</td>
+                  <td>
+                    {new Date(payment.createdAt).toLocaleDateString("vi-VN")}
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
-        </div>
-        <div className="orders_footer">
-          <div className="orders__pagination">
-            <div className="orders_page-numbers">
-              <button className="orders_page-btn">-</button>
-              <button className="orders_page-btn orders_page-btn--active">
-                1
-              </button>
-              <button className="orders_page-btn">2</button>
-              <button className="orders_page-btn">3</button>
-              <button className="orders_page-btn">4</button>
-              <button className="orders_page-btn">5</button>
-              <button className="orders_page-btn">+</button>
-            </div>
-          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default memo(OrderPage);
+export default memo(PaymentTable);

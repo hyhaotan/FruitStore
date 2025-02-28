@@ -1,99 +1,96 @@
 @use "sass:map";
-@import "style/pages/all";
+@import "style/pages/all"; // Import các biến, mixin hay reset đã định nghĩa từ file all.scss
 
 .orders {
   background: #fff;
   border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  font-family: "Roboto", sans-serif;
 
   h2 {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     color: map.get($theme-colors, "normal-text");
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
   }
 
-  &_table {
+  &__table {
     width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 10px;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 20px;
+    /* Xóa overflow: hidden để không cắt nội dung tràn */
+    border-radius: 8px;
 
-    th,
-    td {
-      text-align: center;
-      vertical-align: middle;
-    }
-
-    tbody > tr > td{
-        padding: 12px;
-    }
-  }
-  &_pagination {
-    display: flex;
-    justify-content: space-between;
-    align-self: center;
-    margin-bottom: 30px;
-  }
-  &_page-numbers {
-    display: flex;
-    gap: 5px;
-  }
-
-  &_page-btn {
-    height: 36px;
-    min-width: 36px;
-    padding: 0 12px;
-    font-size: 14px;
-    color: map.get($theme-colors, "normal-text");
-    background: #ffffff;
-    border: 1px solid #ebebeb;
-    border-radius: 4px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-
-    &:hover:not(&--active) {
-      color: #ffffff;
+    thead {
       background: map.get($theme-colors, "main");
+      color: #fff;
+
+      th {
+        padding: 15px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
     }
 
-    &--active {
-      color: #ffffff;
-      background: map.get($theme-colors, "main");
-      border-color: map.get($theme-colors, "main");
+    tbody {
+      tr {
+        &:nth-child(even) {
+          background: #f9f9f9;
+        }
+        &:hover {
+          background: #f1f1f1;
+        }
+      }
+
+      td {
+        padding: 15px;
+        text-align: center;
+        vertical-align: middle;
+        border-bottom: 1px solid #ebebeb;
+        /* Đảm bảo dropdown trong td không bị cắt */
+        overflow: visible;
+      }
     }
   }
-  &_dropdown {
+
+  &__dropdown {
     position: relative;
     min-width: 150px;
-    display: flex;
-    justify-content: center;
 
     &-menu {
       position: absolute;
-      top: calc(100% + 4px);
+      top: calc(100% + 8px);
       right: 0;
       background: #ffffff;
       border-radius: 4px;
       border: 1px solid #ebebeb;
       min-width: 160px;
-      z-index: 1;
+      z-index: 10;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      transform: translateY(-10px);
+      animation: dropdownFade 0.3s forwards;
     }
 
     &-item {
       width: 100%;
-      padding: 10px 18px;
+      padding: 10px 16px;
       font-size: 14px;
       color: map.get($theme-colors, "normal-text");
       background: none;
       border: none;
       text-align: left;
       cursor: pointer;
-      display: block;
+      transition: background 0.2s ease;
 
       &:hover {
         background: #f5f5f5;
       }
 
-      &-danger {
+      &--danger {
         color: red;
 
         &:hover {
@@ -103,32 +100,61 @@
     }
   }
 
-  &_action-button {
-    height: 36px;
-    padding: 0 18px;
+  &__action-button {
+    height: 40px;
+    padding: 0 20px;
     font-size: 14px;
     color: map.get($theme-colors, "normal-text");
-    background: #ffffff;
+    background: #fff;
     border: 1px solid #ebebeb;
     border-radius: 4px;
-    display: flex;
-    justify-content: center;
+    display: inline-flex;
     align-items: center;
+    justify-content: center;
     cursor: pointer;
-    gap: 8px;
-    min-width: 150px;
+    gap: 10px;
+    transition: background 0.3s, transform 0.2s;
 
     &:hover {
       background: #f5f5f5;
+      transform: translateY(-2px);
     }
 
-    // .arrow{
-    //     transform: rotate(180deg);
-    // }
-
     .arrow {
-      font-size: 10px;
+      font-size: 12px;
       transition: transform 0.2s ease;
+    }
+  }
+}
+
+@keyframes dropdownFade {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .orders {
+    padding: 15px;
+
+    h2 {
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+
+    &__table {
+      thead th,
+      tbody td {
+        padding: 10px;
+        font-size: 12px;
+      }
+    }
+
+    &__action-button {
+      height: 36px;
+      padding: 0 12px;
+      font-size: 12px;
     }
   }
 }

@@ -17,7 +17,7 @@ const Quantity = ({
   // Hàm tăng số lượng
   const handleIncrement = async () => {
     const previousQuantity = quantity;
-    setQuantity(previousQuantity + 1); // cập nhật UI ngay
+    setQuantity(previousQuantity + 1);
     try {
       const response = await axios.put(
         `http://localhost:5000/api/carts/increment/${id}`
@@ -33,14 +33,14 @@ const Quantity = ({
   const handleDecrement = async () => {
     if (quantity > 1) {
       const previousQuantity = quantity;
-      setQuantity(previousQuantity - 1); // cập nhật UI ngay
+      setQuantity(previousQuantity - 1);
       try {
         const response = await axios.put(
           `http://localhost:5000/api/carts/decrement/${id}`
         );
         if (onQuantityChange) onQuantityChange(response.data.quantity);
       } catch (error) {
-        setQuantity(previousQuantity); // khôi phục nếu lỗi
+        setQuantity(previousQuantity);
         console.error("Error decrementing quantity on server:", error);
       }
     }
@@ -66,28 +66,23 @@ const Quantity = ({
     }
   };
 
-  // Hàm xử lý thêm sản phẩm vào giỏ hàng
-  const handleAddCart = async () => {
-    if (isAdding) return;
+  // Hàm thêm sản phẩm vào giỏ hàng
+  const handleAddToCart = async () => {
     setIsAdding(true);
     try {
       const response = await axios.post("http://localhost:5000/api/carts", {
         productId: id,
-        name,
-        price,
-        image,
-        quantity,
+        name: name,
+        price: price,
+        image: image,
+        quantity: quantity,
       });
       alert("Sản phẩm đã được thêm vào giỏ hàng!");
       console.log("Cart item:", response.data);
     } catch (error) {
       console.error("Lỗi khi thêm sản phẩm vào giỏ hàng:", error);
-      alert(
-        "Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng. Vui lòng thử lại sau."
-      );
-    } finally {
-      setIsAdding(false);
     }
+    setIsAdding(false);
   };
 
   return (
@@ -103,10 +98,9 @@ const Quantity = ({
       </div>
       {hasAddToCart && (
         <button
-          type="submit"
+          type="button"
           className="button-submit"
-          onClick={handleAddCart}
-          disabled={isAdding}
+          onClick={handleAddToCart}
         >
           {isAdding ? "Đang thêm..." : "Thêm giỏ hàng"}
         </button>
