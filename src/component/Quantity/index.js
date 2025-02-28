@@ -14,60 +14,69 @@ const Quantity = ({
   const [quantity, setQuantity] = useState(initialQuantity);
   const [isAdding, setIsAdding] = useState(false);
 
-  // Hàm cập nhật số lượng trên server
-  const updateQuantityOnServer = async (newQuantity) => {
-    try {
-      const response = await axios.put(
-        `http://localhost:5000/api/carts/${id}`,
-        { quantity: newQuantity }
-      );
-      return response.data.quantity;
-    } catch (error) {
-      console.error("Error updating quantity on server:", error);
-      return quantity; // Nếu có lỗi, giữ lại số lượng hiện tại
-    }
-  };
-
   // Hàm tăng số lượng
   const handleIncrement = async () => {
-    const newQuantity = quantity + 1;
-    const updatedQuantity = await updateQuantityOnServer(newQuantity);
-    setQuantity(updatedQuantity);
-    if (onQuantityChange) onQuantityChange(updatedQuantity);
-  };
-
-  // Hàm giảm số lượng (chỉ cho phép giảm khi số lượng > 1)
-  const handleDecrement = async () => {
-    if (quantity > 1) {
-      const newQuantity = quantity - 1;
-      const updatedQuantity = await updateQuantityOnServer(newQuantity);
-      setQuantity(updatedQuantity);
-      if (onQuantityChange) onQuantityChange(updatedQuantity);
+    const previousQuantity = quantity;
+    setQuantity(previousQuantity + 1); // cập nhật UI ngay
+    try {
+      const response = await axios.put(
+        `http://localhost:5000/api/carts/increment/${id}`
+      );
+      if (onQuantityChange) onQuantityChange(response.data.quantity);
+    } catch (error) {
+      setQuantity(previousQuantity); // khôi phục giá trị ban đầu nếu lỗi
+      console.error("Error incrementing quantity on server:", error);
     }
   };
 
-  // Hàm xử lý khi người dùng nhập số lượng trực tiếp
+  // Hàm giảm số lượng
+  const handleDecrement = async () => {
+    if (quantity > 1) {
+      const previousQuantity = quantity;
+      setQuantity(previousQuantity - 1); // cập nhật UI ngay
+      try {
+        const response = await axios.put(
+          `http://localhost:5000/api/carts/decrement/${id}`
+        );
+        if (onQuantityChange) onQuantityChange(response.data.quantity);
+      } catch (error) {
+        setQuantity(previousQuantity); // khôi phục nếu lỗi
+        console.error("Error decrementing quantity on server:", error);
+      }
+    }
+  };
+
+  // Hàm cập nhật số lượng khi người dùng nhập trực tiếp
   const handleInputChange = async (e) => {
     let newQuantity = parseInt(e.target.value, 10);
     if (isNaN(newQuantity) || newQuantity < 1) {
       newQuantity = 1;
     }
-    const updatedQuantity = await updateQuantityOnServer(newQuantity);
-    setQuantity(updatedQuantity);
-    if (onQuantityChange) onQuantityChange(updatedQuantity);
+    const previousQuantity = quantity;
+    setQuantity(newQuantity);
+    try {
+      const response = await axios.put(
+        `http://localhost:5000/api/carts/${id}`,
+        { quantity: newQuantity }
+      );
+      if (onQuantityChange) onQuantityChange(response.data.quantity);
+    } catch (error) {
+      setQuantity(previousQuantity);
+      console.error("Error updating quantity on server:", error);
+    }
   };
 
   // Hàm xử lý thêm sản phẩm vào giỏ hàng
   const handleAddCart = async () => {
-    if (isAdding) return; // Ngăn chặn gửi nhiều yêu cầu
+    if (isAdding) return;
     setIsAdding(true);
     try {
       const response = await axios.post("http://localhost:5000/api/carts", {
         productId: id,
-        name: name,
-        price: price,
-        image: image,
-        quantity: quantity, // Sử dụng số lượng hiện tại được chọn
+        name,
+        price,
+        image,
+        quantity,
       });
       alert("Sản phẩm đã được thêm vào giỏ hàng!");
       console.log("Cart item:", response.data);

@@ -90,7 +90,7 @@ const ShoppingCartPage = () => {
                     <td>
                       <Quantity
                         initialQuantity={item.quantity}
-                        id={item._id} // truyền ID của cart item
+                        id={item._id}
                         onQuantityChange={(newQuantity) =>
                           handleQuantityChange(item._id, newQuantity)
                         }

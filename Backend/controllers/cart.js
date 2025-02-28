@@ -1,5 +1,6 @@
 const Cart = require("../models/cart");
 const Product = require("../models/product");
+const mongoose = require("mongoose");
 
 const getCart = async (req, res) => {
   try {
@@ -81,7 +82,7 @@ const updateCartItem = async (req, res) => {
         : existingCartItem.quantity;
 
     const updatedCartItem = await Cart.findByIdAndUpdate(
-      existingCartItem._id,
+      existingCartItem.id,
       { quantity: newQuantity },
       { new: true }
     );
@@ -122,10 +123,50 @@ const clearCart = async (req, res) => {
   }
 };
 
+const incrementQuantityProduct = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const cartItem = await Cart.findById(id);
+    if (!cartItem) {
+      return res.status(404).json({ message: "Cart item not found" });
+    }
+
+    cartItem.quantity += 1;
+    const updatedCartItem = await cartItem.save();
+    res.status(200).json(updatedCartItem);
+  } catch (error) {
+    console.error("Error incrementing product:", error);
+    res.status(500).json({ message: "Error incrementing product", error });
+  }
+};
+
+const decrementQuantityProduct = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const cartItem = await Cart.findById(id);
+    if (!cartItem) {
+      return res.status(404).json({ message: "Cart item not found" });
+    }
+
+    if (cartItem.quantity > 1) {
+      cartItem.quantity -= 1;
+      const updatedCartItem = await cartItem.save();
+      return res.status(200).json(updatedCartItem);
+    }
+
+    res.status(400).json({ message: "Quantity cannot be less than 1" });
+  } catch (error) {
+    console.error("Error decrementing product:", error);
+    res.status(500).json({ message: "Error decrementing product", error });
+  }
+};
+
 module.exports = {
   getCart,
   addCart,
   updateCartItem,
   deleteCartItem,
   clearCart,
+  incrementQuantityProduct,
+  decrementQuantityProduct,
 };
