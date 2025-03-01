@@ -17,5 +17,6 @@ export const ROUTER = {
     LOGIN: `${ADMIN_PATH}/dang-nhap`,
     ORDERS: `${ADMIN_PATH}/dat-hang`,
     LOGOUT: `${ADMIN_PATH}/dang-xuat`,
+    PRODUCTS: `${ADMIN_PATH}/san-pham`,
   },
 };

@@ -36,10 +36,10 @@ const PaymentSchema = new mongoose.Schema(
       enum: ["cash", "credit_card", "bank_transfer"],
       required: [true, "Payment method is required"],
     },
-    paymentStatus: {
+    sendStatus: {
       type: String,
-      enum: ["pending", "completed", "failed"],
-      default: "pending",
+      enum: ["processing", "sent", "completed", "failed"],
+      default: "processing",
     },
     orderStatus: {
       type: String,

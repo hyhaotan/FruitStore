@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { AiOutlineLogout, AiOutlineShoppingCart } from "react-icons/ai";
+import { AiOutlineLogout, AiOutlineProduct, AiOutlineShoppingCart } from "react-icons/ai";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ROUTER } from "utils/router";
 import "./style.scss";
@@ -12,6 +12,12 @@ const HeaderAd = ({ children, ...props }) => {
       onClick: () => navigate(ROUTER.ADMIN.ORDERS),
       lable: "Đặt hàng",
       icon: <AiOutlineShoppingCart />,
+    },
+    {
+      path: ROUTER.ADMIN.PRODUCTS,
+      onClick: () => navigate(ROUTER.ADMIN.PRODUCTS),
+      lable: "Sản phẩm",
+      icon: <AiOutlineProduct />,
     },
     {
       path: ROUTER.ADMIN.LOGOUT,

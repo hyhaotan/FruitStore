@@ -69,6 +69,9 @@ const OrderPage = () => {
                   <p>
                     <strong>Trạng thái đơn hàng:</strong> {order.orderStatus}
                   </p>
+                  <p>
+                    <strong>Trạng thái gửi đơn:</strong> {order.sendStatus}
+                  </p>
                   <div className="order-products">
                     <h4>Sản phẩm:</h4>
                     <ul>

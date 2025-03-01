@@ -39,7 +39,7 @@ const payment = async (req, res) => {
       cartItems,
       totalAmount,
       paymentMethod,
-      paymentStatus: "pending",
+      sendStatus: "processing",
       orderStatus: "not_received",
       customer: {
         name: customer.name,
@@ -112,4 +112,70 @@ const confirmOrder = async (req, res) => {
   }
 };
 
-module.exports = { getPayment, payment, confirmOrder };
+const editSendOrder = async (req, res) => {
+  try {
+    const { paymentId } = req.params;
+    const { sendStatus } = req.body;
+
+    const payment = await Payment.findByIdAndUpdate(
+      paymentId,
+      { sendStatus },
+      { new: true }
+    );
+
+    if (!payment) {
+      return res.status(404).json({
+        success: false,
+        message: "Không tìm thấy đơn hàng",
+      });
+    }
+
+    // Gửi phản hồi khi cập nhật thành công
+    return res.json({
+      success: true,
+      message: "Cập nhật trạng thái gửi đơn thành công",
+      data: payment,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const deleteOrder = async (req, res) => {
+  try {
+    const { paymentId } = req.params;
+
+    // Tìm đơn hàng theo id
+    const payment = await Payment.findById(paymentId);
+    if (!payment) {
+      return res.status(404).json({
+        success: false,
+        message: "Không tìm thấy đơn hàng",
+      });
+    }
+
+    await Payment.findByIdAndDelete(paymentId);
+
+    // Gửi phản hồi thành công về phía client
+    res.json({
+      success: true,
+      message: "Đã xóa đơn hàng",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+module.exports = {
+  getPayment,
+  payment,
+  confirmOrder,
+  editSendOrder,
+  deleteOrder,
+};

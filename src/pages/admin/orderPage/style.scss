@@ -1,6 +1,13 @@
 @use "sass:map";
 @import "style/pages/all"; // Import các biến, mixin hay reset đã định nghĩa từ file all.scss
 
+// Container mở rộng chiều rộng
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
 .orders {
   background: #fff;
   border-radius: 8px;
@@ -21,13 +28,11 @@
     border-collapse: separate;
     border-spacing: 0;
     margin-bottom: 20px;
-    /* Xóa overflow: hidden để không cắt nội dung tràn */
     border-radius: 8px;
 
     thead {
       background: map.get($theme-colors, "main");
       color: #fff;
-
       th {
         padding: 15px;
         text-transform: uppercase;
@@ -44,13 +49,11 @@
           background: #f1f1f1;
         }
       }
-
       td {
         padding: 15px;
         text-align: center;
         vertical-align: middle;
         border-bottom: 1px solid #ebebeb;
-        /* Đảm bảo dropdown trong td không bị cắt */
         overflow: visible;
       }
     }
@@ -59,7 +62,6 @@
   &__dropdown {
     position: relative;
     min-width: 150px;
-
     &-menu {
       position: absolute;
       top: calc(100% + 8px);
@@ -74,7 +76,6 @@
       transform: translateY(-10px);
       animation: dropdownFade 0.3s forwards;
     }
-
     &-item {
       width: 100%;
       padding: 10px 16px;
@@ -85,14 +86,11 @@
       text-align: left;
       cursor: pointer;
       transition: background 0.2s ease;
-
       &:hover {
         background: #f5f5f5;
       }
-
       &--danger {
         color: red;
-
         &:hover {
           background: #ffebee;
         }
@@ -100,30 +98,12 @@
     }
   }
 
+  // Sử dụng các style của nút cơ bản từ lớp .btn
   &__action-button {
-    height: 40px;
-    padding: 0 20px;
-    font-size: 14px;
-    color: map.get($theme-colors, "normal-text");
+    @extend .btn;
     background: #fff;
+    color: map.get($theme-colors, "normal-text");
     border: 1px solid #ebebeb;
-    border-radius: 4px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    gap: 10px;
-    transition: background 0.3s, transform 0.2s;
-
-    &:hover {
-      background: #f5f5f5;
-      transform: translateY(-2px);
-    }
-
-    .arrow {
-      font-size: 12px;
-      transition: transform 0.2s ease;
-    }
   }
 }
 
@@ -134,15 +114,152 @@
   }
 }
 
+/* ===================== */
+/*     Styles cho Button  */
+/* ===================== */
+.btn {
+  padding: 10px 20px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn--primary {
+  background: map.get($theme-colors, "main");
+  color: #fff;
+}
+
+.btn--primary:hover {
+  background: darken(map.get($theme-colors, "main"), 10%);
+  transform: translateY(-2px);
+}
+
+.btn--danger {
+  background: red;
+  color: #fff;
+}
+
+.btn--danger:hover {
+  background: darken(red, 10%);
+  transform: translateY(-2px);
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+  z-index: 100;
+
+  &__content {
+    background: #fff;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    padding: 30px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.4s ease;
+    position: relative;
+
+    /* Header với tiêu đề và nút đóng */
+    &__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+
+      h3 {
+        font-size: 24px;
+        margin: 0;
+      }
+
+      &__close {
+        font-size: 28px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: rgb(17, 169, 230);
+        transition: color 0.3s;
+        &:hover {
+          color: #000;
+        }
+      }
+    }
+
+    /* Phần thân nội dung */
+    &__body {
+      margin-bottom: 20px;
+
+      .modal__table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+
+        th,
+        td {
+          padding: 10px;
+          border: 1px solid #ddd;
+          text-align: left;
+        }
+      }
+    }
+
+    /* Nút đóng ở cuối modal */
+    &__button {
+      background: rgb(17, 169, 230);
+      border: none;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+      &:hover {
+        background: rgb(10, 130, 200);
+      }
+    }
+  }
+}
+
+/* Keyframe animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
 @media (max-width: 768px) {
   .orders {
     padding: 15px;
-
     h2 {
       font-size: 22px;
       margin-bottom: 15px;
     }
-
     &__table {
       thead th,
       tbody td {
@@ -150,7 +267,6 @@
         font-size: 12px;
       }
     }
-
     &__action-button {
       height: 36px;
       padding: 0 12px;
