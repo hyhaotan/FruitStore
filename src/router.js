@@ -13,6 +13,7 @@ import MasterAdLayout from "pages/admin/theme/masterAdLayout";
 import LoginUserPage from "pages/users/login";
 import Register from "pages/users/register";
 import OrderPage from "pages/users/orderPage";
+import ProductPage from "pages/admin/productPage";
 
 const renderUserRouter = () => {
   const userRouters = [
@@ -74,6 +75,10 @@ const renderAdminRouter = () => {
     {
       path: ROUTER.ADMIN.ORDERS,
       component: <OrderPageAdPage />,
+    },
+    {
+      path: ROUTER.ADMIN.PRODUCTS,
+      component: <ProductPage />,
     },
   ];
 

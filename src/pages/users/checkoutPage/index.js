@@ -12,8 +12,7 @@ const CheckoutPage = () => {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [note, setNote] = useState("");
-  // Lựa chọn phương thức thanh toán: cash, credit_card, bank_transfer
-  const [paymentMethod, setPaymentMethod] = useState("cash");
+  const [paymentMethod, setPaymentMethod] = useState("Tiền mặc");
   const [loading, setLoading] = useState(false);
   const [paymentResponse, setPaymentResponse] = useState(null);
 
@@ -155,11 +154,11 @@ const CheckoutPage = () => {
                 onChange={(e) => setPaymentMethod(e.target.value)}
                 style={{ width: "100%", padding: "8px", marginTop: "10px" }}
               >
-                <option value="cash">Thanh toán tiền mặt</option>
-                <option value="credit_card">
+                <option value="Tiền mặc">Thanh toán tiền mặt</option>
+                <option value="Thẻ tín dụng">
                   Thanh toán bằng thẻ tín dụng
                 </option>
-                <option value="bank_transfer">Chuyển khoản ngân hàng</option>
+                <option value="Chuyển khoản">Chuyển khoản ngân hàng</option>
               </select>
             </div>
           </div>

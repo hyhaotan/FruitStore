@@ -5,9 +5,14 @@ const productSchema = new mongoose.Schema({
   image: { type: String, required: true },
   price: { type: Number, required: true },
   quantity: { type: Number, required: true, default: 0 },
-  status: { type: String, enum: ["active", "inactive"], default: "active" },
+  status: {
+    type: String,
+    enum: ["Có sẵn", "Không có sẵn"],
+    default: "Có sẵn",
+  },
   infomation_detail: { type: String },
   description: { type: String },
+  type: { type: String },
 });
 
 module.exports = mongoose.model("Product", productSchema);

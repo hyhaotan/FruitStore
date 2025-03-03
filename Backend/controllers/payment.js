@@ -39,8 +39,8 @@ const payment = async (req, res) => {
       cartItems,
       totalAmount,
       paymentMethod,
-      sendStatus: "processing",
-      orderStatus: "not_received",
+      sendStatus: "Đang xử lí",
+      orderStatus: "Chưa nhận",
       customer: {
         name: customer.name,
         email: customer.email,
@@ -81,14 +81,14 @@ const confirmOrder = async (req, res) => {
     }
 
     // Kiểm tra trạng thái hiện tại của đơn hàng
-    if (payment.orderStatus === "received") {
+    if (payment.orderStatus === "Đã nhận") {
       return res.status(400).json({
         success: false,
         message: "Đơn hàng đã được xác nhận",
       });
     }
 
-    if (payment.orderStatus !== "not_received") {
+    if (payment.orderStatus !== "Chưa nhận") {
       return res.status(400).json({
         success: false,
         message: `Không thể xác nhận đơn hàng với trạng thái '${payment.orderStatus}'`,
@@ -96,7 +96,7 @@ const confirmOrder = async (req, res) => {
     }
 
     // Cập nhật trạng thái đơn hàng thành "received"
-    payment.orderStatus = "received";
+    payment.orderStatus = "Đã nhận";
     const updatedPayment = await payment.save();
 
     res.json({

@@ -34,7 +34,7 @@ const OrderPage = () => {
       // Cập nhật lại trạng thái đơn hàng trong state
       setOrders((prevOrders) =>
         prevOrders.map((order) =>
-          order._id === orderId ? { ...order, orderStatus: "received" } : order
+          order._id === orderId ? { ...order, orderStatus: "Đã nhận" } : order
         )
       );
       alert("Xác nhận đơn hàng thành công!");
@@ -84,7 +84,7 @@ const OrderPage = () => {
                     </ul>
                   </div>
                   {/* Nếu đơn hàng chưa được xác nhận, hiển thị nút xác nhận */}
-                  {order.orderStatus === "not_received" && (
+                  {order.orderStatus === "Chưa nhận" && (
                     <button onClick={() => handleConfirmOrder(order._id)}>
                       Xác nhận đã nhận hàng
                     </button>

@@ -1,5 +1,9 @@
 import { memo } from "react";
-import { AiOutlineLogout, AiOutlineProduct, AiOutlineShoppingCart } from "react-icons/ai";
+import {
+  AiOutlineLogout,
+  AiOutlineProduct,
+  AiOutlineShoppingCart,
+} from "react-icons/ai";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ROUTER } from "utils/router";
 import "./style.scss";
@@ -21,7 +25,7 @@ const HeaderAd = ({ children, ...props }) => {
     },
     {
       path: ROUTER.ADMIN.LOGOUT,
-      onClick: () => {},
+      onClick: () => navigate(ROUTER.ADMIN.LOGIN),
       lable: "Đăng xuất",
       icon: <AiOutlineLogout />,
     },

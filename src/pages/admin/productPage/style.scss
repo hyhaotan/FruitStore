@@ -1,0 +1,251 @@
+@use "sass:map";
+@import "style/pages/all"; // Import biến, mixin, reset từ file all.scss
+
+// Container chính
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+// Giao diện quản lý sản phẩm
+.products {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  font-family: "Roboto", sans-serif;
+
+  h2 {
+    margin-bottom: 20px;
+    color: map.get($theme-colors, "normal-text");
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  &__actions {
+    margin-bottom: 15px;
+
+    .products__add-button {
+      background: map.get($theme-colors, "main");
+      color: #fff;
+      border: none;
+      &:hover {
+        background: darken(map.get($theme-colors, "main"), 10%);
+      }
+    }
+  }
+
+  &__content {
+    overflow-x: auto;
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 20px;
+    border-radius: 8px;
+
+    thead {
+      background: map.get($theme-colors, "main");
+      color: #fff;
+      th {
+        padding: 15px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+    }
+
+    tbody {
+      tr {
+        &:nth-child(even) {
+          background: #f9f9f9;
+        }
+        &:hover {
+          background: #f1f1f1;
+        }
+      }
+      td {
+        padding: 15px;
+        text-align: center;
+        vertical-align: middle;
+        border-bottom: 1px solid #ebebeb;
+        overflow: visible;
+      }
+    }
+  }
+}
+
+/* Modal dùng chung cho trang */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+  z-index: 100;
+
+  &__content {
+    background: #fff;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    padding: 30px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.4s ease;
+    position: relative;
+
+    /* Header modal */
+    &__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+
+      h3 {
+        font-size: 24px;
+        margin: 0;
+      }
+
+      &__close {
+        font-size: 28px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: rgb(17, 169, 230);
+        transition: color 0.3s;
+        &:hover {
+          color: #000;
+        }
+      }
+    }
+
+    /* Nội dung modal */
+    &__body {
+      margin-bottom: 20px;
+
+      .modal__table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        th,
+        td {
+          padding: 10px;
+          border: 1px solid #ddd;
+          text-align: left;
+        }
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+
+        label {
+          display: block;
+          margin-bottom: 5px;
+          font-weight: 500;
+        }
+
+        input,
+        select,
+        textarea {
+          width: 100%;
+          padding: 8px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+        }
+
+        textarea {
+          resize: vertical;
+        }
+      }
+    }
+
+    /* Nút ở cuối modal */
+    &__button {
+      background: rgb(17, 169, 230);
+      color: #fff;
+      border: none;
+      &:hover {
+        background: rgb(10, 130, 200);
+      }
+    }
+  }
+}
+
+.btn {
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.3s ease;
+  font-size: 14px;
+
+  &--edit {
+    background: #4caf50; // màu xanh lá
+    color: #fff;
+    margin-right: 5px;
+
+    &:hover {
+      background: #45a049;
+    }
+  }
+
+  &--delete {
+    background: #f44336; // màu đỏ
+    color: #fff;
+
+    &:hover {
+      background: #e53935;
+    }
+  }
+}
+
+/* Hiệu ứng cho modal */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .products {
+    padding: 15px;
+    h2 {
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+    &__table {
+      thead th,
+      tbody td {
+        padding: 10px;
+        font-size: 12px;
+      }
+    }
+    .products__add-button {
+      padding: 8px 12px;
+      font-size: 12px;
+    }
+  }
+}

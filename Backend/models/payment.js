@@ -33,18 +33,18 @@ const PaymentSchema = new mongoose.Schema(
     },
     paymentMethod: {
       type: String,
-      enum: ["cash", "credit_card", "bank_transfer"],
+      enum: ["Tiền mặc", "Thẻ tín dụng", "Chuyển khoản"],
       required: [true, "Payment method is required"],
     },
     sendStatus: {
       type: String,
-      enum: ["processing", "sent", "completed", "failed"],
-      default: "processing",
+      enum: ["Đang xử lí", "Đã gửi", "Hoàn tất", "Thất bại"],
+      default: "Đang xử lí",
     },
     orderStatus: {
       type: String,
-      enum: ["not_received", "received", "canceled"],
-      default: "not_received",
+      enum: ["Chưa nhận", "Đã nhận", "Hủy"],
+      default: "Chưa nhận",
     },
     customer: {
       name: {
