@@ -1,6 +1,27 @@
 const User = require("../models/user");
 const mongoose = require("mongoose");
 
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({});
+    return res.status(200).json(users);
+  } catch (error) {
+    console.error("Lỗi khi lấy danh sách người dùng:", error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await User.findByIdAndDelete(id);
+    return res.status(200).json({ message: "Xóa người dùng thành công!" });
+  } catch (error) {
+    console.error("Lỗi khi xóa người dùng:", error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 const registerUser = async (req, res) => {
   const { email, username, password, confirmPassword } = req.body;
   try {
@@ -126,4 +147,6 @@ module.exports = {
   editUsername,
   editPassword,
   editEmail,
+  getAllUsers,
+  deleteUser,
 };

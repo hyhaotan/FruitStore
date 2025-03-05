@@ -1,36 +1,17 @@
-// controllers/admin.js
 const Admin = require("../models/admin");
 
 const loginAdmin = async (req, res) => {
   const { email, password } = req.body;
-
-  // Kiểm tra dữ liệu đầu vào
-  if (!email || !password) {
-    return res.status(400).json({ message: "Vui lòng nhập email và mật khẩu" });
-  }
-
   try {
-    // Tìm admin theo email
-    const admin = await Admin.findOne({ email });
+    const admin = await Admin.findOne({ email, password });
     if (!admin) {
-      return res
-        .status(400)
-        .json({ message: "Email hoặc mật khẩu không chính xác" });
+      return res.status(404).json({
+        message: "Admin không tồn tại hoặc thông tin đăng nhập không chính xác",
+      });
     }
-
-    // So sánh mật khẩu trực tiếp (nên dùng bcrypt trong sản xuất)
-    if (password !== admin.password) {
-      return res
-        .status(400)
-        .json({ message: "Email hoặc mật khẩu không chính xác" });
-    }
-
-    // Loại bỏ trường password trước khi trả về
-    const { password: pwd, ...adminWithoutPassword } = admin.toObject();
-
-    res.json({ message: "Đăng nhập thành công", admin: adminWithoutPassword });
+    return res.status(200).json({ message: "Đăng nhập thành công", admin });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 

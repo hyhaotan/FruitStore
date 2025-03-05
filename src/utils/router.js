@@ -11,6 +11,8 @@ export const ROUTER = {
     LOGIN: "/dang-nhap",
     REGISTER: "/dang-ky",
     ORDER: "/don-hang",
+    CONTACT: "/lien-he",
+    ARTICLE: "/bai-viet",
   },
 
   ADMIN: {
@@ -18,5 +20,6 @@ export const ROUTER = {
     ORDERS: `${ADMIN_PATH}/dat-hang`,
     LOGOUT: `${ADMIN_PATH}/dang-xuat`,
     PRODUCTS: `${ADMIN_PATH}/san-pham`,
+    ACCOUNT: `${ADMIN_PATH}/tai-khoan`,
   },
 };

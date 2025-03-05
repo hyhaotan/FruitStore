@@ -1,4 +1,3 @@
-// LoginAdPage.jsx
 import { memo } from "react";
 import "./style.scss";
 import { useNavigate } from "react-router-dom";
@@ -9,9 +8,8 @@ const LoginAdPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Lấy dữ liệu từ form
     const formData = new FormData(e.target);
-    const email = formData.get("username"); // input username chứa email
+    const email = formData.get("email");
     const password = formData.get("password");
 
     try {
@@ -31,6 +29,7 @@ const LoginAdPage = () => {
       }
     } catch (error) {
       console.error("Error during login:", error);
+      alert("Đã có lỗi xảy ra trong quá trình đăng nhập");
     }
   };
 
@@ -40,10 +39,10 @@ const LoginAdPage = () => {
         <h2 className="login_title">TRUY CẬP HỆ THỐNG QUẢN TRỊ</h2>
         <form className="login_form" onSubmit={handleSubmit}>
           <div className="login_form_group">
-            <label htmlFor="username" className="login_label">
-              Tên đăng nhập
+            <label htmlFor="email" className="login_label">
+              Email
             </label>
-            <input type="text" id="username" name="username" required />
+            <input type="text" id="email" name="email" required />
           </div>
           <div className="login_form_group">
             <label htmlFor="password" className="login_label">

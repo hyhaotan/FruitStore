@@ -14,6 +14,9 @@ import LoginUserPage from "pages/users/login";
 import Register from "pages/users/register";
 import OrderPage from "pages/users/orderPage";
 import ProductPage from "pages/admin/productPage";
+import AccountPage from "pages/admin/accountPage";
+import ContactPage from "pages/users/contactPage";
+import ArticlePage from "pages/users/articlePage";
 
 const renderUserRouter = () => {
   const userRouters = [
@@ -53,6 +56,14 @@ const renderUserRouter = () => {
       path: ROUTER.USER.ORDER,
       component: <OrderPage />,
     },
+    {
+      path: ROUTER.USER.CONTACT,
+      component: <ContactPage />,
+    },
+    {
+      path: ROUTER.USER.ARTICLE,
+      component: <ArticlePage />,
+    },
   ];
 
   return (
@@ -79,6 +90,10 @@ const renderAdminRouter = () => {
     {
       path: ROUTER.ADMIN.PRODUCTS,
       component: <ProductPage />,
+    },
+    {
+      path: ROUTER.ADMIN.ACCOUNT,
+      component: <AccountPage />,
     },
   ];
 

@@ -49,8 +49,8 @@ const Header = () => {
         { name: "Thức ăn nhanh", path: "#" },
       ],
     },
-    { name: "Bài viết", path: ROUTER.USER.HOME },
-    { name: "Liên hệ", path: ROUTER.USER.HOME },
+    { name: "Bài viết", path: ROUTER.USER.ARTICLE },
+    { name: "Liên hệ", path: ROUTER.USER.CONTACT },
   ]);
 
   // Lấy thông tin người dùng từ localStorage nếu có

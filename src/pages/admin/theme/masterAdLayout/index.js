@@ -9,11 +9,14 @@ const MasterAdLayout = ({ children, ...props }) => {
   const isLoginPage = location.pathname.startsWith(ROUTER.ADMIN.LOGIN);
   const isOrderPage = location.pathname.startsWith(ROUTER.ADMIN.ORDERS);
   const isProductPage = location.pathname.startsWith(ROUTER.ADMIN.PRODUCTS);
+  const isAccountPage = location.pathname.startsWith(ROUTER.ADMIN.ACCOUNT);
   return (
     <div {...props}>
       {!isLoginPage && <HeaderAd />}
       {children}
-      {!isLoginPage && !isOrderPage && !isProductPage && <Footer />}
+      {!isLoginPage && !isOrderPage && !isProductPage && !isAccountPage && (
+        <Footer />
+      )}
     </div>
   );
 };
