@@ -7,6 +7,7 @@ const {
   updateProduct,
   findProducts,
   getTypeProducts,
+  applyPriceProduct,
 } = require("../controllers/product");
 
 const router = express.Router();
@@ -17,5 +18,6 @@ router.put("/api/products/:id", updateProduct);
 router.delete("/api/products/:id", deleteProduct);
 router.get("/api/products", findProducts);
 router.get("/api/products", getTypeProducts);
+router.get("/api/products", applyPriceProduct);
 
 module.exports = router;

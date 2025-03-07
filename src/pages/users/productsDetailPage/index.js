@@ -11,18 +11,18 @@ import {
 } from "react-icons/ai";
 import { formater } from "utils/formater";
 import { ProductCard, Quantity } from "component";
-import { featProducts } from "utils/common";
 
-const ProductsDetailPage = (name, image, price) => {
+const ProductsDetailPage = () => {
   // Lấy id sản phẩm từ URL
   const { id } = useParams();
 
-  // State để lưu thông tin sản phẩm, trạng thái loading và lỗi (nếu có)
+  // State lưu thông tin sản phẩm, sản phẩm tương tự, loading và error
   const [product, setProduct] = useState(null);
+  const [similarProducts, setSimilarProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch dữ liệu sản phẩm khi component mount hoặc id thay đổi
+  // Fetch dữ liệu sản phẩm chi tiết
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -41,7 +41,23 @@ const ProductsDetailPage = (name, image, price) => {
     fetchProduct();
   }, [id]);
 
-  // Hiển thị trạng thái loading hoặc lỗi nếu có
+  // Fetch dữ liệu sản phẩm tương tự
+  useEffect(() => {
+    const fetchSimilarProducts = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/products`);
+        // Giả sử sản phẩm tương tự là các sản phẩm khác với sản phẩm đang xem
+        const filtered = response.data.filter((item) => item.id !== id);
+        setSimilarProducts(filtered);
+      } catch (err) {
+        console.error("Lỗi khi tải sản phẩm tương tự:", err);
+      }
+    };
+
+    fetchSimilarProducts();
+  }, [id]);
+
+  // Hiển thị trạng thái loading, lỗi hoặc thông báo khi không có sản phẩm
   if (loading) {
     return <div>Đang tải...</div>;
   }
@@ -54,6 +70,7 @@ const ProductsDetailPage = (name, image, price) => {
     return <div>Không có thông tin sản phẩm.</div>;
   }
 
+  // Nếu không có mảng additionalImages thì sử dụng hình ảnh chính
   const additionalImages = product.additionalImages || [product.image];
 
   return (
@@ -81,7 +98,6 @@ const ProductsDetailPage = (name, image, price) => {
               {product.description ||
                 "Chưa có mô tả chi tiết cho sản phẩm này."}
             </p>
-            {/* Component thay đổi số lượng mua */}
             <Quantity />
             <ul>
               <li>
@@ -108,12 +124,10 @@ const ProductsDetailPage = (name, image, price) => {
           <h4>Thông tin chi tiết</h4>
           <div>
             {product.infomation_detail ? (
-              // Nếu sản phẩm có thông tin chi tiết (có thể là HTML) thì render bằng dangerouslySetInnerHTML
               <div
                 dangerouslySetInnerHTML={{ __html: product.infomation_detail }}
               />
             ) : (
-              // Nếu không có thì hiển thị nội dung mặc định
               <div>
                 <ul>
                   <li>
@@ -196,16 +210,23 @@ const ProductsDetailPage = (name, image, price) => {
           <h2>Sản phẩm tương tự</h2>
         </div>
         <div className="row">
-          {featProducts.all.products.map((item, key) => (
-            <div key={key} className="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-              <ProductCard
-                id={item.id}
-                image={item.img}
-                name={item.name}
-                price={item.price}
-              />
-            </div>
-          ))}
+          {similarProducts.length > 0 ? (
+            similarProducts.map((item) => (
+              <div
+                key={item._id}
+                className="col-lg-3 col-md-4 col-sm-6 col-xs-12"
+              >
+                <ProductCard
+                  id={item._id}
+                  image={item.image}
+                  name={item.name}
+                  price={item.price}
+                />
+              </div>
+            ))
+          ) : (
+            <p>Không có sản phẩm tương tự.</p>
+          )}
         </div>
       </div>
     </>

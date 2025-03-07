@@ -11,10 +11,12 @@ import axios from "axios";
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Lấy giá trị query parameter 'category' từ URL và sử dụng nó làm loại sản phẩm
+  // Lấy giá trị query parameter 'category' từ URL (nếu bạn có sử dụng cho các mục đích khác)
   const searchParams = new URLSearchParams(location.search);
   const productType = searchParams.get("category");
 
@@ -28,11 +30,10 @@ const ProductsPage = () => {
     "Giảm giá",
   ];
 
-  // Khi component mount hoặc khi productType thay đổi, gọi API để lấy sản phẩm
+  // Khi component mount hoặc khi productType thay đổi, lấy toàn bộ sản phẩm ban đầu
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        // Nếu có productType, truyền tham số { type: productType } vào API
         const response = await axios.get("http://localhost:5000/api/products", {
           params: productType ? { type: productType } : {},
         });
@@ -69,6 +70,22 @@ const ProductsPage = () => {
     }
   };
 
+  // Xử lý lọc sản phẩm theo mức giá
+  const handlePriceFilter = async () => {
+    try {
+      // Gọi API với minPrice và maxPrice lấy từ state
+      const response = await axios.get("http://localhost:5000/api/products", {
+        params: {
+          minPrice: minPrice,
+          maxPrice: maxPrice,
+        },
+      });
+      setProducts(response.data);
+    } catch (error) {
+      console.error("Price filter failed:", error);
+    }
+  };
+
   const renderProducts = () => {
     return (
       <div className="row">
@@ -76,7 +93,7 @@ const ProductsPage = () => {
           <div className="col-lg-4 col-md-4 col-sm-6 col-xs-12" key={item._id}>
             <ProductCard
               id={item._id}
-              image={item.image} // Sử dụng field image theo schema
+              image={item.image}
               name={item.name}
               price={item.price}
             />
@@ -110,13 +127,24 @@ const ProductsPage = () => {
                 <div className="price-range-wrap">
                   <div>
                     <p>Từ:</p>
-                    <input type="number" min={0} />
+                    <input
+                      type="number"
+                      min={0}
+                      value={minPrice}
+                      onChange={(e) => setMinPrice(e.target.value)}
+                    />
                   </div>
                   <div>
                     <p>Đến:</p>
-                    <input type="number" min={0} />
+                    <input
+                      type="number"
+                      min={0}
+                      value={maxPrice}
+                      onChange={(e) => setMaxPrice(e.target.value)}
+                    />
                   </div>
                 </div>
+                <button className="btn_applyPrice" onClick={handlePriceFilter}>Áp dụng</button>
               </div>
               <div className="sidebar_item">
                 <h2>Sắp xếp</h2>

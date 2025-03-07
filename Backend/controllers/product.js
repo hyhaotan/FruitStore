@@ -117,6 +117,35 @@ const getTypeProducts = async (req, res) => {
   }
 };
 
+const applyPriceProduct = async (req, res) => {
+  try {
+    const { minPrice, maxPrice } = req.query;
+    const filter = {};
+
+    // Kiểm tra và chuyển đổi minPrice và maxPrice sang số
+    const min = minPrice ? Number(minPrice) : null;
+    const max = maxPrice ? Number(maxPrice) : null;
+
+    if ((minPrice && isNaN(min)) || (maxPrice && isNaN(max))) {
+      return res
+        .status(400)
+        .json({ error: "Giá trị minPrice hoặc maxPrice không hợp lệ" });
+    }
+
+    if (min !== null || max !== null) {
+      filter.price = {};
+      if (min !== null) filter.price.$gte = min;
+      if (max !== null) filter.price.$lte = max;
+    }
+
+    const products = await Product.find(filter);
+    return res.status(200).json(products);
+  } catch (error) {
+    console.error("Error in applyPriceProduct:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
 module.exports = {
   getProduct,
   getProductDetails,
@@ -125,4 +154,5 @@ module.exports = {
   createProduct,
   findProducts,
   getTypeProducts,
+  applyPriceProduct,
 };

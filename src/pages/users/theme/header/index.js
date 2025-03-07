@@ -43,7 +43,6 @@ const Header = () => {
       path: "#",
       isShowSubmenu: false,
       child: [
-        // Các mục con sẽ chuyển đến trang Products với query parameter ?category=...
         { name: "Thịt", path: "#" },
         { name: "Rau củ", path: "#" },
         { name: "Thức ăn nhanh", path: "#" },
