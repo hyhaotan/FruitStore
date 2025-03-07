@@ -43,6 +43,7 @@ const Header = () => {
       path: "#",
       isShowSubmenu: false,
       child: [
+        // Các mục con sẽ chuyển đến trang Products với query parameter ?category=...
         { name: "Thịt", path: "#" },
         { name: "Rau củ", path: "#" },
         { name: "Thức ăn nhanh", path: "#" },
@@ -142,7 +143,7 @@ const Header = () => {
                     {menu.child.map((childItem, childkey) => (
                       <li key={childkey}>
                         <Link
-                          // Sửa đường dẫn ở đây để truyền query parameter theo danh mục
+                          // Mỗi mục con chuyển hướng đến trang Products với query parameter category
                           to={`${
                             ROUTER.USER.PRODUCTS
                           }?category=${encodeURIComponent(childItem.name)}`}
@@ -254,6 +255,7 @@ const Header = () => {
                         {menu.child.map((childItem, childKey) => (
                           <li key={`${menuKey}-${childKey}`}>
                             <Link
+                              // Link của menu con chuyển hướng sang trang Products với query parameter category
                               to={`${
                                 ROUTER.USER.PRODUCTS
                               }?category=${encodeURIComponent(childItem.name)}`}
@@ -305,6 +307,7 @@ const Header = () => {
               {categories.map((category, key) => (
                 <li key={key}>
                   <Link
+                    // Mỗi danh mục chuyển hướng sang trang Products với query parameter category
                     to={`${ROUTER.USER.PRODUCTS}?category=${encodeURIComponent(
                       category
                     )}`}

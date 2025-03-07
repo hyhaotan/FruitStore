@@ -101,14 +101,15 @@ const findProducts = async (req, res) => {
 
 const getTypeProducts = async (req, res) => {
   try {
-    const { type } = req.query;
-    if (!type) {
-      return res
-        .status(400)
-        .json({ error: "Type query parameter is required" });
+    const { type, name } = req.query;
+    let filter = {};
+    if (name) {
+      filter.name = new RegExp(name, "i");
     }
-    // Tìm các sản phẩm có trường type khớp với giá trị được truyền vào
-    const products = await Product.find({ type });
+    if (type) {
+      filter.type = type;
+    }
+    const products = await Product.find(filter);
     res.status(200).json(products);
   } catch (error) {
     console.error("Error fetching products by type:", error);

@@ -13,11 +13,12 @@ const ProductsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
-  
-  // Lấy giá trị category từ query string
-  const searchParams = new URLSearchParams(location.search);
-  const category = searchParams.get("category");
 
+  // Lấy giá trị query parameter 'category' từ URL và sử dụng nó làm loại sản phẩm
+  const searchParams = new URLSearchParams(location.search);
+  const productType = searchParams.get("category");
+
+  // Các tùy chọn sắp xếp (nếu cần)
   const sorts = [
     "Giá thấp đến cao",
     "Giá cao đến thấp",
@@ -27,13 +28,13 @@ const ProductsPage = () => {
     "Giảm giá",
   ];
 
-  // Lấy sản phẩm khi component được mount và khi category thay đổi
+  // Khi component mount hoặc khi productType thay đổi, gọi API để lấy sản phẩm
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        // Nếu có category, truyền tham số category vào API
+        // Nếu có productType, truyền tham số { type: productType } vào API
         const response = await axios.get("http://localhost:5000/api/products", {
-          params: category ? { category } : {},
+          params: productType ? { type: productType } : {},
         });
         setProducts(response.data);
       } catch (error) {
@@ -41,9 +42,9 @@ const ProductsPage = () => {
       }
     };
     fetchProducts();
-  }, [category]);
+  }, [productType]);
 
-  // Xử lý tìm kiếm sản phẩm
+  // Xử lý tìm kiếm sản phẩm theo tên
   const handleSearch = async (e) => {
     e.preventDefault();
     try {
@@ -75,7 +76,7 @@ const ProductsPage = () => {
           <div className="col-lg-4 col-md-4 col-sm-6 col-xs-12" key={item._id}>
             <ProductCard
               id={item._id}
-              image={item.img}
+              image={item.image} // Sử dụng field image theo schema
               name={item.name}
               price={item.price}
             />
@@ -135,7 +136,11 @@ const ProductsPage = () => {
                 <ul>
                   {categories.map((name, key) => (
                     <li key={key}>
-                      <Link to={`${ROUTER.USER.PRODUCTS}?category=${encodeURIComponent(name)}`}>
+                      <Link
+                        to={`${
+                          ROUTER.USER.PRODUCTS
+                        }?category=${encodeURIComponent(name)}`}
+                      >
                         {name}
                       </Link>
                     </li>
