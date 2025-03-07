@@ -1,4 +1,3 @@
-// Header.jsx
 import { memo, useEffect, useRef, useState } from "react";
 import "./style.scss";
 import {
@@ -142,7 +141,14 @@ const Header = () => {
                   >
                     {menu.child.map((childItem, childkey) => (
                       <li key={childkey}>
-                        <Link to={childItem.path}>{childItem.name}</Link>
+                        <Link
+                          // Sửa đường dẫn ở đây để truyền query parameter theo danh mục
+                          to={`${
+                            ROUTER.USER.PRODUCTS
+                          }?category=${encodeURIComponent(childItem.name)}`}
+                        >
+                          {childItem.name}
+                        </Link>
                       </li>
                     ))}
                   </ul>
@@ -247,7 +253,13 @@ const Header = () => {
                       <ul className="header_menu_dropdown">
                         {menu.child.map((childItem, childKey) => (
                           <li key={`${menuKey}-${childKey}`}>
-                            <Link to={childItem.path}>{childItem.name}</Link>
+                            <Link
+                              to={`${
+                                ROUTER.USER.PRODUCTS
+                              }?category=${encodeURIComponent(childItem.name)}`}
+                            >
+                              {childItem.name}
+                            </Link>
                           </li>
                         ))}
                       </ul>
@@ -292,7 +304,13 @@ const Header = () => {
             <ul className={isShowCategories ? "" : "hidden"}>
               {categories.map((category, key) => (
                 <li key={key}>
-                  <Link to={ROUTER.USER.PRODUCTS}>{category}</Link>
+                  <Link
+                    to={`${ROUTER.USER.PRODUCTS}?category=${encodeURIComponent(
+                      category
+                    )}`}
+                  >
+                    {category}
+                  </Link>
                 </li>
               ))}
             </ul>

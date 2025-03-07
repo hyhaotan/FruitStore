@@ -1,4 +1,5 @@
 import { memo, useState, useEffect } from "react";
+import { useNavigate, generatePath, useLocation } from "react-router-dom";
 import Breadcrumb from "../theme/breadcrumb";
 import "./style.scss";
 import { Link } from "react-router-dom";
@@ -9,6 +10,14 @@ import axios from "axios";
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Lấy giá trị category từ query string
+  const searchParams = new URLSearchParams(location.search);
+  const category = searchParams.get("category");
+
   const sorts = [
     "Giá thấp đến cao",
     "Giá cao đến thấp",
@@ -18,13 +27,46 @@ const ProductsPage = () => {
     "Giảm giá",
   ];
 
+  // Lấy sản phẩm khi component được mount và khi category thay đổi
   useEffect(() => {
-    // Gọi API để lấy danh sách sản phẩm
-    axios
-      .get("http://localhost:5000/api/products")
-      .then((response) => setProducts(response.data))
-      .catch((error) => console.error("Error fetching products:", error));
-  }, []);
+    const fetchProducts = async () => {
+      try {
+        // Nếu có category, truyền tham số category vào API
+        const response = await axios.get("http://localhost:5000/api/products", {
+          params: category ? { category } : {},
+        });
+        setProducts(response.data);
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      }
+    };
+    fetchProducts();
+  }, [category]);
+
+  // Xử lý tìm kiếm sản phẩm
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.get("http://localhost:5000/api/products", {
+        params: { name: searchTerm },
+      });
+      const results = response.data;
+      if (results.length === 0) {
+        alert("Không tìm thấy sản phẩm");
+      } else {
+        const exactProduct = results.find(
+          (item) => item.name.toLowerCase() === searchTerm.toLowerCase()
+        );
+        if (exactProduct) {
+          navigate(generatePath(ROUTER.USER.PRODUCT, { id: exactProduct._id }));
+        } else {
+          alert("Không tìm thấy sản phẩm có tên chính xác");
+        }
+      }
+    } catch (error) {
+      console.error("Search failed:", error);
+    }
+  };
 
   const renderProducts = () => {
     return (
@@ -53,7 +95,14 @@ const ProductsPage = () => {
             <div className="sidebar">
               <div className="sidebar_item">
                 <h2>Tìm kiếm</h2>
-                <input type="text" placeholder="Tìm kiếm sản phẩm..." />
+                <form onSubmit={handleSearch}>
+                  <input
+                    type="text"
+                    placeholder="Tìm kiếm sản phẩm..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </form>
               </div>
               <div className="sidebar_item">
                 <h2>Mức giá</h2>
@@ -86,7 +135,9 @@ const ProductsPage = () => {
                 <ul>
                   {categories.map((name, key) => (
                     <li key={key}>
-                      <Link to={ROUTER.USER.PRODUCTS}>{name}</Link>
+                      <Link to={`${ROUTER.USER.PRODUCTS}?category=${encodeURIComponent(name)}`}>
+                        {name}
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -94,7 +145,7 @@ const ProductsPage = () => {
             </div>
           </div>
 
-          {/* Products */}
+          {/* Danh sách sản phẩm */}
           <div className="col-lg-9 col-md-12 col-sm-12 col-xs-12">
             {renderProducts()}
           </div>

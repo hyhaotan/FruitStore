@@ -19,4 +19,5 @@ router.get("/api/users/profile/:id", getUserProfile);
 router.put("/api/users/editPassword/:id", editPassword);
 router.put("/api/users/editUsername/:id", editUsername);
 router.put("/api/users/editEmail/:id", editEmail);
+
 module.exports = router;
