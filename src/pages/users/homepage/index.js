@@ -12,6 +12,7 @@ import cat5Img from "assets/users/images/categories/cat5.jpg";
 import banner1 from "assets/users/images/banner/banner1.jpg";
 import banner2 from "assets/users/images/banner/banner2.jpg";
 import ProductCard from "component/ProductCard";
+import NewsSection from "component/News";
 import axios from "axios";
 
 const HomePage = () => {
@@ -89,6 +90,13 @@ const HomePage = () => {
         </div>
       </div>
       {/* Products End */}
+ 
+
+      {/* News Section Begin */}
+      <div className="container">
+        <NewsSection />
+      </div>
+      {/* News Section End */}
 
       {/* Banner Begin */}
       <div className="container">

@@ -1,6 +1,7 @@
 import { memo } from "react";
 import {
   AiOutlineAccountBook,
+  AiOutlineInfo,
   AiOutlineLogout,
   AiOutlineProduct,
   AiOutlineShoppingCart,
@@ -23,6 +24,12 @@ const HeaderAd = ({ children, ...props }) => {
       onClick: () => navigate(ROUTER.ADMIN.PRODUCTS),
       lable: "Sản phẩm",
       icon: <AiOutlineProduct />,
+    },
+    {
+      path: ROUTER.ADMIN.NEWS,
+      onClick: () => navigate(ROUTER.ADMIN.NEWS),
+      lable: "Tin tức",
+      icon: <AiOutlineInfo />,
     },
     {
       path: ROUTER.ADMIN.ACCOUNT,

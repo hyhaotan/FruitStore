@@ -21,5 +21,6 @@ export const ROUTER = {
     LOGOUT: `${ADMIN_PATH}/dang-xuat`,
     PRODUCTS: `${ADMIN_PATH}/san-pham`,
     ACCOUNT: `${ADMIN_PATH}/tai-khoan`,
+    NEWS: `${ADMIN_PATH}/tin-tuc`,
   },
 };

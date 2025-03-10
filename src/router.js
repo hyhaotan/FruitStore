@@ -17,6 +17,7 @@ import ProductPage from "pages/admin/productPage";
 import AccountPage from "pages/admin/accountPage";
 import ContactPage from "pages/users/contactPage";
 import ArticlePage from "pages/users/articlePage";
+import NewsPage from "pages/admin/newsPage";
 
 const renderUserRouter = () => {
   const userRouters = [
@@ -94,6 +95,10 @@ const renderAdminRouter = () => {
     {
       path: ROUTER.ADMIN.ACCOUNT,
       component: <AccountPage />,
+    },
+    {
+      path: ROUTER.ADMIN.NEWS,
+      component: <NewsPage />,
     },
   ];
 
