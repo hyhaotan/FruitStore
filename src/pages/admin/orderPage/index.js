@@ -4,19 +4,19 @@ import { formater } from "utils/formater";
 
 const ORDER_STATUSES = {
   processing: {
-    key: "processing",
+    key: "Đang chờ xử lý",
     label: "Đang chờ xử lý",
   },
   sent: {
-    key: "sent",
+    key: "Đã gửi",
     label: "Đã gửi",
   },
   completed: {
-    key: "completed",
+    key: "Hoàn thành",
     label: "Hoàn thành",
   },
   failed: {
-    key: "failed",
+    key: "Thất bại",
     label: "Thất bại",
   },
 };

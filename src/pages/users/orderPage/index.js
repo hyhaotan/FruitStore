@@ -28,13 +28,15 @@ const OrderPage = () => {
   }, []);
 
   // Hàm xử lý xác nhận đơn hàng đã nhận
-  const handleConfirmOrder = async (orderId) => {
+  const handleConfirmOrder = async (paymentId) => {
     try {
-      await axios.put(`http://localhost:5000/api/payments/${orderId}/confirm`);
+      await axios.put(
+        `http://localhost:5000/api/payments/${paymentId}/confirm`
+      );
       // Cập nhật lại trạng thái đơn hàng trong state
       setOrders((prevOrders) =>
         prevOrders.map((order) =>
-          order._id === orderId ? { ...order, orderStatus: "Đã nhận" } : order
+          order._id === paymentId ? { ...order, orderStatus: "Đã nhận" } : order
         )
       );
       alert("Xác nhận đơn hàng thành công!");

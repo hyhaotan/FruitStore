@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from "react";
 import "./style.scss";
 
-const NewsPage = () => {
+const NewsAdminPage = () => {
   const [newsList, setNewsList] = useState([]);
   const [selectedNews, setSelectedNews] = useState(null);
 
@@ -124,4 +124,4 @@ const NewsPage = () => {
   );
 };
 
-export default memo(NewsPage);
+export default memo(NewsAdminPage);

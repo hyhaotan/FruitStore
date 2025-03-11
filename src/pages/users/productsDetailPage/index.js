@@ -21,6 +21,8 @@ const ProductsDetailPage = () => {
   const [similarProducts, setSimilarProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  // Nếu cần theo dõi số lượng đặt hàng được chọn từ Quantity
+  const [selectedQuantity, setSelectedQuantity] = useState(1);
 
   // Fetch dữ liệu sản phẩm chi tiết
   useEffect(() => {
@@ -47,7 +49,8 @@ const ProductsDetailPage = () => {
       try {
         const response = await axios.get(`http://localhost:5000/api/products`);
         // Giả sử sản phẩm tương tự là các sản phẩm khác với sản phẩm đang xem
-        const filtered = response.data.filter((item) => item.id !== id);
+        // (Chú ý: Nếu id sản phẩm dùng _id, hãy so sánh đúng key)
+        const filtered = response.data.filter((item) => item._id !== id);
         setSimilarProducts(filtered);
       } catch (err) {
         console.error("Lỗi khi tải sản phẩm tương tự:", err);
@@ -98,7 +101,19 @@ const ProductsDetailPage = () => {
               {product.description ||
                 "Chưa có mô tả chi tiết cho sản phẩm này."}
             </p>
-            <Quantity />
+            {/* Component Quantity dùng để điều chỉnh số lượng đặt hàng */}
+            <Quantity
+              id={product._id}
+              initialQuantity={1}
+              name={product.name}
+              price={product.price}
+              image={product.image}
+              hasAddToCart={true}
+              // Nếu cần, đồng bộ số lượng được chọn
+              onQuantityChange={(newQuantity) =>
+                setSelectedQuantity(newQuantity)
+              }
+            />
             <ul>
               <li>
                 <b>Tình trạng:</b>{" "}

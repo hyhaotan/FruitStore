@@ -13,6 +13,7 @@ export const ROUTER = {
     ORDER: "/don-hang",
     CONTACT: "/lien-he",
     ARTICLE: "/bai-viet",
+    NEWS: "/news/:id",
   },
 
   ADMIN: {

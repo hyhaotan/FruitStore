@@ -17,7 +17,8 @@ import ProductPage from "pages/admin/productPage";
 import AccountPage from "pages/admin/accountPage";
 import ContactPage from "pages/users/contactPage";
 import ArticlePage from "pages/users/articlePage";
-import NewsPage from "pages/admin/newsPage";
+import NewsAdminPage from "pages/admin/newsPage";
+import NewsPage from "pages/users/newsPage";
 
 const renderUserRouter = () => {
   const userRouters = [
@@ -65,6 +66,10 @@ const renderUserRouter = () => {
       path: ROUTER.USER.ARTICLE,
       component: <ArticlePage />,
     },
+    {
+      path: ROUTER.USER.NEWS,
+      component: <NewsPage />,
+    },
   ];
 
   return (
@@ -98,7 +103,7 @@ const renderAdminRouter = () => {
     },
     {
       path: ROUTER.ADMIN.NEWS,
-      component: <NewsPage />,
+      component: <NewsAdminPage />,
     },
   ];
 
