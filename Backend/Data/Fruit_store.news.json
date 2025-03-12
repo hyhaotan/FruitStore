@@ -1,0 +1,33 @@
+[{
+  "_id": {
+    "$oid": "67d1864c00d8480cb4e2c259"
+  },
+  "title": "Khám phá ẩm thực đường phố tại Hà Nội",
+  "content": "Hà Nội luôn nổi tiếng với ẩm thực đường phố độc đáo. Từ phở, bún chả đến các món ăn vặt, du khách sẽ được trải nghiệm những hương vị đậm đà và không thể quên.",
+  "image": "https://example.com/images/news/hanoi-food.jpg",
+  "createdAt": {
+    "$date": "2025-03-12T13:04:12.035Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d1864c00d8480cb4e2c25a"
+  },
+  "title": "Thực phẩm hữu cơ – Lựa chọn lành mạnh cho gia đình",
+  "content": "Ngày nay, xu hướng sử dụng thực phẩm hữu cơ ngày càng phổ biến. Hãy cùng tìm hiểu cách lựa chọn và chế biến thực phẩm hữu cơ để bảo vệ sức khỏe cho cả gia đình.",
+  "image": "https://example.com/images/news/organic-food.jpg",
+  "createdAt": {
+    "$date": "2025-03-12T13:04:12.035Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67d1864c00d8480cb4e2c25b"
+  },
+  "title": "Món ăn truyền thống Việt Nam: Bí quyết của hương vị đặc trưng",
+  "content": "Món ăn truyền thống không chỉ là những công thức nấu ăn gia truyền mà còn chứa đựng cả câu chuyện văn hóa. Hãy khám phá bí quyết để giữ trọn vẹn hương vị đặc trưng của ẩm thực Việt.",
+  "image": "https://example.com/images/news/vietnam-food.jpg",
+  "createdAt": {
+    "$date": "2025-03-12T13:04:12.035Z"
+  }
+}]

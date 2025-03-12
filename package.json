@@ -18,7 +18,9 @@
     "react-multi-carousel": "^2.8.5",
     "react-router-dom": "^7.1.5",
     "react-scripts": "5.0.1",
+    "react-slick": "^0.30.3",
     "react-tabs": "^6.1.0",
+    "slick-carousel": "^1.8.1",
     "web-vitals": "^4.2.4"
   },
   "scripts": {
