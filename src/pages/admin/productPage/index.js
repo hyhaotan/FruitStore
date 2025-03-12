@@ -121,13 +121,28 @@ const ProductManagement = () => {
     }
   };
 
-  // Cập nhật giá trị form khi người dùng nhập
+  // Cập nhật giá trị form khi người dùng nhập (cho các input text, number,...)
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProductForm((prev) => ({
       ...prev,
       [name]: name === "price" || name === "quantity" ? Number(value) : value,
     }));
+  };
+
+  // Xử lý chọn file ảnh và chuyển đổi sang Base64
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProductForm((prevForm) => ({
+          ...prevForm,
+          image: reader.result,
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -225,13 +240,25 @@ const ProductManagement = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Ảnh (URL)</label>
+                  <label>Ảnh</label>
                   <input
-                    type="text"
+                    type="file"
                     name="image"
-                    value={productForm.image}
-                    onChange={handleChange}
+                    accept="image/*"
+                    onChange={handleImageChange}
                   />
+                  {productForm.image && (
+                    <img
+                      src={productForm.image}
+                      alt="Preview"
+                      style={{
+                        width: "100px",
+                        height: "100px",
+                        objectFit: "cover",
+                        marginTop: "10px",
+                      }}
+                    />
+                  )}
                 </div>
                 <div className="form-group">
                   <label>Giá</label>

@@ -10,9 +10,9 @@ const getAllArticle = async (req, res) => {
 };
 
 const postArticle = async (req, res) => {
-  const { title, name, content } = req.body;
+  const { image, title, name, content } = req.body;
   try {
-    const article = await Article.create({ title, name, content });
+    const article = await Article.create({ image, title, name, content });
     return res
       .status(200)
       .json({ message: "Thêm bài viết thành công", article });

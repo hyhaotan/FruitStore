@@ -84,11 +84,11 @@ const ProductsDetailPage = () => {
           {/* Phần hiển thị hình ảnh sản phẩm */}
           <div className="col-lg-6 col-xl-12 col-md-12 col-sm-12 col-xs-12 product_detail_pic">
             <img src={product.image} alt={product.name} />
-            <div className="main">
+            {/* <div className="main">
               {additionalImages.map((img, key) => (
                 <img src={img} alt="product-pic" key={key} />
               ))}
-            </div>
+            </div> */}
           </div>
           {/* Phần hiển thị thông tin sản phẩm */}
           <div className="col-lg-6 col-xl-12 col-md-12 col-sm-12 col-xs-12 product_detail_text">

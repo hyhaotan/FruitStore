@@ -11,6 +11,7 @@ const paymentRoutes = require("./router/payment");
 const userRoutes = require("./router/user");
 const adminRoutes = require("./router/admin");
 const newsRoutes = require("./router/news");
+const ActicleRoutes = require("./router/article");
 const app = express();
 
 app.use(cors());
@@ -34,6 +35,7 @@ app.use(paymentRoutes);
 app.use(userRoutes);
 app.use(adminRoutes);
 app.use(newsRoutes);
+app.use(ActicleRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
