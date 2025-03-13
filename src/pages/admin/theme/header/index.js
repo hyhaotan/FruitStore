@@ -1,6 +1,7 @@
 import { memo } from "react";
 import {
   AiOutlineAccountBook,
+  AiOutlineCloud,
   AiOutlineInfo,
   AiOutlineLogout,
   AiOutlineProduct,
@@ -36,6 +37,12 @@ const HeaderAd = ({ children, ...props }) => {
       onClick: () => navigate(ROUTER.ADMIN.ACCOUNT),
       lable: "Tài khoản",
       icon: <AiOutlineAccountBook />,
+    },
+    {
+      path: ROUTER.ADMIN.COUPON,
+      onClick: () => navigate(ROUTER.ADMIN.COUPON),
+      lable: "Mã giảm giá",
+      icon: <AiOutlineCloud />,
     },
     {
       path: ROUTER.ADMIN.LOGOUT,

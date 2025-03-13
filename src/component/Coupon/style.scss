@@ -1,0 +1,22 @@
+.shopping_continue {
+  margin-top: 50px;
+
+  h3 {
+    margin-bottom: 10px;
+  }
+
+  .shopping_discount {
+    display: flex;
+    align-items: center;
+    padding-right: 20px;
+    column-gap: 20px;
+
+    button {
+      height: 40px;
+      width: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}

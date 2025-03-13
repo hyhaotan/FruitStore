@@ -12,6 +12,7 @@ const userRoutes = require("./router/user");
 const adminRoutes = require("./router/admin");
 const newsRoutes = require("./router/news");
 const ActicleRoutes = require("./router/article");
+const CouponRoutes = require("./router/coupon");
 const app = express();
 
 app.use(cors());
@@ -36,6 +37,7 @@ app.use(userRoutes);
 app.use(adminRoutes);
 app.use(newsRoutes);
 app.use(ActicleRoutes);
+app.use(CouponRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

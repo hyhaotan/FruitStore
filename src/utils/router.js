@@ -13,6 +13,7 @@ export const ROUTER = {
     ORDER: "/don-hang",
     CONTACT: "/lien-he",
     ARTICLE: "/bai-viet",
+    COUPON: "/ma-giam-gia",
     NEWS: "/news/:id",
   },
 
@@ -23,5 +24,6 @@ export const ROUTER = {
     PRODUCTS: `${ADMIN_PATH}/san-pham`,
     ACCOUNT: `${ADMIN_PATH}/tai-khoan`,
     NEWS: `${ADMIN_PATH}/tin-tuc`,
+    COUPON: `${ADMIN_PATH}/giam-gia`,
   },
 };

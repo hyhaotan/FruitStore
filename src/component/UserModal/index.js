@@ -11,10 +11,9 @@ const UserModal = ({ targetRef, onClose, onLogout }) => {
   useEffect(() => {
     if (targetRef.current) {
       const rect = targetRef.current.getBoundingClientRect();
-      // Tính toán vị trí modal: ngay dưới phần target
       setStyles({
         position: "absolute",
-        top: rect.bottom + window.scrollY, // bên dưới phần target
+        top: rect.bottom + window.scrollY,
         left: rect.left + window.scrollX,
         zIndex: 1000,
       });
@@ -36,6 +35,11 @@ const UserModal = ({ targetRef, onClose, onLogout }) => {
           <li>
             <Link to={ROUTER.USER.ORDER} onClick={onClose}>
               Lịch sử đơn hàng
+            </Link>
+          </li>
+          <li>
+            <Link to={ROUTER.USER.COUPON} onClick={onClose}>
+              Mã giảm giá
             </Link>
           </li>
           <li onClick={onLogout}>Logout</li>

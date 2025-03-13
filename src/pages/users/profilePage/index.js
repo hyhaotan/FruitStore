@@ -1,6 +1,7 @@
 import { memo, useState, useEffect } from "react";
 import axios from "axios";
 import "./style.scss"; // Import file style cho trang profile
+import Breadcrumb from "../theme/breadcrumb";
 
 const ProfilePage = () => {
   // Lấy thông tin user từ localStorage
@@ -114,66 +115,69 @@ const ProfilePage = () => {
   if (error) return <div className="profile-page container">{error}</div>;
 
   return (
-    <div className="profile-page container">
-      <h1>Thông tin cá nhân</h1>
-      <div className="profile-item">
-        <label>Tên người dùng</label>
-        {editing.username ? (
-          <input
-            type="text"
-            value={profile.username}
-            onChange={(e) => handleChange("username", e.target.value)}
-          />
-        ) : (
-          <p>{profile.username}</p>
-        )}
-        <button
-          onClick={() =>
-            editing.username ? handleSave("username") : toggleEdit("username")
-          }
-        >
-          {editing.username ? "Lưu" : "Chỉnh sửa"}
-        </button>
+    <>
+      <Breadcrumb name="Mã giảm giá" />
+      <div className="profile-page container">
+        <h1>Thông tin cá nhân</h1>
+        <div className="profile-item">
+          <label>Tên người dùng</label>
+          {editing.username ? (
+            <input
+              type="text"
+              value={profile.username}
+              onChange={(e) => handleChange("username", e.target.value)}
+            />
+          ) : (
+            <p>{profile.username}</p>
+          )}
+          <button
+            onClick={() =>
+              editing.username ? handleSave("username") : toggleEdit("username")
+            }
+          >
+            {editing.username ? "Lưu" : "Chỉnh sửa"}
+          </button>
+        </div>
+        <div className="profile-item">
+          <label>Email</label>
+          {editing.email ? (
+            <input
+              type="email"
+              value={profile.email}
+              onChange={(e) => handleChange("email", e.target.value)}
+            />
+          ) : (
+            <p>{profile.email}</p>
+          )}
+          <button
+            onClick={() =>
+              editing.email ? handleSave("email") : toggleEdit("email")
+            }
+          >
+            {editing.email ? "Lưu" : "Chỉnh sửa"}
+          </button>
+        </div>
+        <div className="profile-item">
+          <label>Mật khẩu</label>
+          {editing.password ? (
+            <input
+              type="password"
+              value={profile.password}
+              onChange={(e) => handleChange("password", e.target.value)}
+            />
+          ) : (
+            <p>********</p>
+          )}
+          <button
+            onClick={() =>
+              editing.password ? handleSave("password") : toggleEdit("password")
+            }
+          >
+            {editing.password ? "Lưu" : "Chỉnh sửa"}
+          </button>
+        </div>
       </div>
-      <div className="profile-item">
-        <label>Email</label>
-        {editing.email ? (
-          <input
-            type="email"
-            value={profile.email}
-            onChange={(e) => handleChange("email", e.target.value)}
-          />
-        ) : (
-          <p>{profile.email}</p>
-        )}
-        <button
-          onClick={() =>
-            editing.email ? handleSave("email") : toggleEdit("email")
-          }
-        >
-          {editing.email ? "Lưu" : "Chỉnh sửa"}
-        </button>
-      </div>
-      <div className="profile-item">
-        <label>Mật khẩu</label>
-        {editing.password ? (
-          <input
-            type="password"
-            value={profile.password}
-            onChange={(e) => handleChange("password", e.target.value)}
-          />
-        ) : (
-          <p>********</p>
-        )}
-        <button
-          onClick={() =>
-            editing.password ? handleSave("password") : toggleEdit("password")
-          }
-        >
-          {editing.password ? "Lưu" : "Chỉnh sửa"}
-        </button>
-      </div>
-    </div>
+    </>
   );
 };
 

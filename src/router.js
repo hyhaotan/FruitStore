@@ -19,6 +19,8 @@ import ContactPage from "pages/users/contactPage";
 import ArticlePage from "pages/users/articlePage";
 import NewsAdminPage from "pages/admin/newsPage";
 import NewsPage from "pages/users/newsPage";
+import CouponAdminPage from "pages/admin/couponPage";
+import CouponPage from "pages/users/couponPage";
 
 const renderUserRouter = () => {
   const userRouters = [
@@ -67,6 +69,10 @@ const renderUserRouter = () => {
       component: <ArticlePage />,
     },
     {
+      path: ROUTER.USER.COUPON,
+      component: <CouponPage />,
+    },
+    {
       path: ROUTER.USER.NEWS,
       component: <NewsPage />,
     },
@@ -104,6 +110,10 @@ const renderAdminRouter = () => {
     {
       path: ROUTER.ADMIN.NEWS,
       component: <NewsAdminPage />,
+    },
+    {
+      path: ROUTER.ADMIN.COUPON,
+      component: <CouponAdminPage />,
     },
   ];
 

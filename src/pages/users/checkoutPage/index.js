@@ -1,5 +1,7 @@
+// CheckoutPage.jsx
 import { memo, useState, useEffect } from "react";
 import Breadcrumb from "../theme/breadcrumb";
+import Coupon from "component/Coupon";
 import "./style.scss";
 import { formater } from "utils/formater";
 import axios from "axios";
@@ -15,6 +17,7 @@ const CheckoutPage = () => {
   const [paymentMethod, setPaymentMethod] = useState("Tiền mặc");
   const [loading, setLoading] = useState(false);
   const [paymentResponse, setPaymentResponse] = useState(null);
+  const [discountValue, setDiscountValue] = useState(0); // Số tiền giảm giá
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -35,6 +38,22 @@ const CheckoutPage = () => {
     0
   );
 
+  // Hàm xử lý áp dụng mã giảm giá từ Coupon
+  const handleApplyDiscount = (code) => {
+    // Ví dụ: nếu mã giảm giá là "SALE10" thì giảm 10% tổng đơn
+    if (code.trim().toUpperCase() === "SALE10") {
+      const discount = totalPrice * 0.1;
+      setDiscountValue(discount);
+      alert("Áp dụng mã giảm giá thành công: giảm 10%!");
+    } else {
+      setDiscountValue(0);
+      alert("Mã giảm giá không hợp lệ!");
+    }
+  };
+
+  // Tính tổng sau khi giảm giá
+  const finalTotal = totalPrice - discountValue;
+
   // Hàm xử lý thanh toán
   const handlePaymentSubmit = async () => {
     if (!customerName || !address || !phone || !email) {
@@ -50,6 +69,7 @@ const CheckoutPage = () => {
     const payload = {
       cartItems,
       paymentMethod,
+      discount: discountValue,
       customer: {
         name: customerName,
         address,
@@ -162,10 +182,12 @@ const CheckoutPage = () => {
               </select>
             </div>
           </div>
-          {/* Phần hiển thị đơn hàng */}
+          {/* Phần hiển thị đơn hàng và mã giảm giá */}
           <div className="col-lg-6 col-md-12 col-sm-12 col-xs-12">
             <div className="checkout_order">
               <h3>Đơn hàng</h3>
+              {/* Hiển thị phần mã giảm giá */}
+              <Coupon onApplyDiscount={handleApplyDiscount} />
               <ul>
                 {cartItems.length > 0 ? (
                   cartItems.map((item) => (
@@ -184,6 +206,18 @@ const CheckoutPage = () => {
                   <h3>Tổng đơn</h3>
                   <b>{formater(totalPrice)}</b>
                 </li>
+                {discountValue > 0 && (
+                  <li className="checkout_order_discount">
+                    <span>Giảm giá:</span>
+                    <b>- {formater(discountValue)}</b>
+                  </li>
+                )}
+                {discountValue > 0 && (
+                  <li className="checkout_order_final">
+                    <h3>Tổng thanh toán</h3>
+                    <b>{formater(finalTotal)}</b>
+                  </li>
+                )}
               </ul>
               <button
                 type="button"
