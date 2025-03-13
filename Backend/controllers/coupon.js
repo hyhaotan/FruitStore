@@ -42,11 +42,13 @@ const applyCoupon = async (req, res) => {
       active: true,
     });
     if (!coupon) {
-      return res.status(404).json({ message: "Coupon not found or inactive" });
+      return res
+        .status(404)
+        .json({ message: "Mã giảm đã không có hoặc không hoạt động" });
     }
 
-    if (coupon.expiresAt && coupon.expiresAt < new Date()) {
-      return res.status(400).json({ message: "Coupon expired" });
+    if (coupon.expirationDate && coupon.expirationDate < new Date()) {
+      return res.status(400).json({ message: "Mã giảm giá đã hết hạn" });
     }
 
     return res
@@ -104,7 +106,6 @@ const updateCoupon = async (req, res) => {
         code: code.toUpperCase(),
         discountPercentage,
         expirationDate: expirationDate ? new Date(expirationDate) : null,
-        // Nếu active không truyền lên thì giữ nguyên giá trị hiện tại (nếu cần)
         active: active !== undefined ? active : true,
       },
       { new: true }

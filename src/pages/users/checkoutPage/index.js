@@ -38,16 +38,38 @@ const CheckoutPage = () => {
     0
   );
 
-  // Hàm xử lý áp dụng mã giảm giá từ Coupon
-  const handleApplyDiscount = (code) => {
-    // Ví dụ: nếu mã giảm giá là "SALE10" thì giảm 10% tổng đơn
-    if (code.trim().toUpperCase() === "SALE10") {
-      const discount = totalPrice * 0.1;
+  // Hàm xử lý áp dụng mã giảm giá dựa vào API từ phía server
+  const handleApplyDiscount = async (code) => {
+    if (!code.trim()) {
+      alert("Vui lòng nhập mã giảm giá");
+      return;
+    }
+
+    try {
+      // Gửi mã coupon đến server để kiểm tra
+      const response = await axios.post(
+        "http://localhost:5000/api/coupons/apply",
+        { code }
+      );
+      // Nếu hợp lệ, nhận về discountPercentage
+      const discountPercentage = response.data.discountPercentage;
+      const discount = totalPrice * (discountPercentage / 100);
+      // Nếu tổng tiền sau giảm giá nhỏ hơn hoặc bằng 0, thông báo cho người dùng
+      if (totalPrice - discount <= 0) {
+        setDiscountValue(0);
+        alert(
+          "Số tiền sau khi áp mã giảm giá đã âm. Vui lòng kiểm tra lại mã giảm giá."
+        );
+        return;
+      }
       setDiscountValue(discount);
-      alert("Áp dụng mã giảm giá thành công: giảm 10%!");
-    } else {
+      alert(`Áp dụng mã giảm giá thành công: giảm ${discountPercentage}%!`);
+    } catch (error) {
       setDiscountValue(0);
-      alert("Mã giảm giá không hợp lệ!");
+      alert(
+        error.response?.data?.message ||
+          "Mã giảm giá không hợp lệ hoặc đã hết hạn!"
+      );
     }
   };
 
@@ -61,7 +83,6 @@ const CheckoutPage = () => {
       return;
     }
 
-    // Kiểm tra giỏ hàng
     if (cartItems.length === 0) {
       alert("Giỏ hàng trống!");
       return;
@@ -70,6 +91,7 @@ const CheckoutPage = () => {
       cartItems,
       paymentMethod,
       discount: discountValue,
+      finalTotal,
       customer: {
         name: customerName,
         address,
@@ -91,8 +113,6 @@ const CheckoutPage = () => {
 
       // Gọi API để xóa toàn bộ sản phẩm trong giỏ hàng trên server
       await axios.delete("http://localhost:5000/api/carts");
-
-      // Cập nhật lại state giỏ hàng thành mảng rỗng
       setCartItems([]);
     } catch (error) {
       console.error("Error processing payment:", error);
@@ -164,7 +184,6 @@ const CheckoutPage = () => {
                 onChange={(e) => setNote(e.target.value)}
               ></textarea>
             </div>
-            {/* Phần chọn phương thức thanh toán dạng dropdown */}
             <div className="checkout_input">
               <label>
                 Phương thức thanh toán: <span className="required">*</span>
@@ -186,7 +205,7 @@ const CheckoutPage = () => {
           <div className="col-lg-6 col-md-12 col-sm-12 col-xs-12">
             <div className="checkout_order">
               <h3>Đơn hàng</h3>
-              {/* Hiển thị phần mã giảm giá */}
+              {/* Hiển thị phần nhập mã giảm giá */}
               <Coupon onApplyDiscount={handleApplyDiscount} />
               <ul>
                 {cartItems.length > 0 ? (

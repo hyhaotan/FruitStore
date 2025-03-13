@@ -1,22 +1,177 @@
-.shopping_continue {
-  margin-top: 50px;
+@use "sass:map";
+@import "style/pages/all";
 
-  h3 {
-    margin-bottom: 10px;
+/* Khu vực input nhập mã coupon + 2 nút */
+.coupon-input {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  input[type="text"] {
+    flex: 1;
+    padding: 0.2rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: border 0.3s;
+    width: 400px;
+
+    &:focus {
+      border-color: map.get($theme-colors, "main");
+      outline: none;
+    }
   }
 
-  .shopping_discount {
-    display: flex;
-    align-items: center;
-    padding-right: 20px;
-    column-gap: 20px;
+  .apply-btn {
+    padding: 0.75rem 1rem;
+    background: map.get($theme-colors, "main");
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s;
+    width: 100px;
 
-    button {
-      height: 40px;
-      width: 200px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    &:hover {
+      background: darken(map.get($theme-colors, "main"), 10%);
     }
+  }
+
+  .view-btn {
+    padding: 0.75rem 1rem;
+    background: #f7f7f7;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s, border-color 0.3s;
+    width: 50px;
+
+    &:hover {
+      background: #eee;
+      border-color: #999;
+    }
+  }
+}
+
+/* ============================= */
+/*        PHẦN MODAL            */
+/* ============================= */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #fff;
+  width: 400px;
+  max-width: 90%;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  padding: 1rem;
+  z-index: 101;
+  animation: fadeInDown 0.3s ease both;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.5rem;
+
+  h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    display: block;
+  }
+
+  .close-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.3s;
+    width: 50px;
+
+    &:hover {
+      color: #333;
+    }
+  }
+}
+
+.modal-body {
+  margin-top: 1rem;
+
+  .coupon-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fafafa;
+    border-radius: 6px;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid #eee;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    &.active {
+      border-color: map.get($theme-colors, "main");
+      background: #e8f5e9; /* Nền nhẹ khi coupon đang active */
+    }
+
+    .select-btn {
+      padding: 0.5rem 1rem;
+      background: map.get($theme-colors, "main");
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+      width: 100px;
+
+      &:hover {
+        background: darken(map.get($theme-colors, "main"), 10%);
+      }
+
+      &.disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+
+      &.active {
+        background: map.get($theme-colors, "main");
+        cursor: default;
+      }
+    }
+  }
+}
+
+/* Style cho trạng thái và ngày hết hạn */
+.coupon-status,
+.expiration-date {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+@keyframes fadeInDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

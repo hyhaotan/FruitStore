@@ -1,7 +1,7 @@
 import { memo, useState, useEffect } from "react";
 import axios from "axios";
 import Breadcrumb from "../theme/breadcrumb";
-import "./style.scss"; // File style cho trang lịch sử đơn hàng
+import "./style.scss";
 
 const OrderPage = () => {
   const [orders, setOrders] = useState([]);
@@ -61,9 +61,23 @@ const OrderPage = () => {
               orders.map((order) => (
                 <div key={order._id} className="order-item">
                   <h3>Đơn hàng: {order._id}</h3>
-                  <p>
-                    <strong>Tổng tiền:</strong> {order.totalAmount}
-                  </p>
+                  {order.discount > 0 ? (
+                    <>
+                      <p>
+                        <strong>Tổng tiền ban đầu:</strong> {order.totalAmount}
+                      </p>
+                      <p>
+                        <strong>Giảm giá:</strong> {order.discount}
+                      </p>
+                      <p>
+                        <strong>Tổng thanh toán:</strong> {order.finalTotal}
+                      </p>
+                    </>
+                  ) : (
+                    <p>
+                      <strong>Tổng tiền:</strong> {order.totalAmount}
+                    </p>
+                  )}
                   <p>
                     <strong>Phương thức thanh toán:</strong>{" "}
                     {order.paymentMethod}

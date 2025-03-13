@@ -1,12 +1,12 @@
 import { memo } from "react";
 import {
   AiOutlineAccountBook,
-  AiOutlineCloud,
   AiOutlineInfo,
   AiOutlineLogout,
   AiOutlineProduct,
   AiOutlineShoppingCart,
 } from "react-icons/ai";
+import { FaTicketAlt } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ROUTER } from "utils/router";
 import "./style.scss";
@@ -42,7 +42,7 @@ const HeaderAd = ({ children, ...props }) => {
       path: ROUTER.ADMIN.COUPON,
       onClick: () => navigate(ROUTER.ADMIN.COUPON),
       lable: "Mã giảm giá",
-      icon: <AiOutlineCloud />,
+      icon: <FaTicketAlt />,
     },
     {
       path: ROUTER.ADMIN.LOGOUT,

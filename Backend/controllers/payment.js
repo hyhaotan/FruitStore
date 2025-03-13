@@ -11,7 +11,7 @@ const getPayment = async (req, res) => {
 
 const payment = async (req, res) => {
   try {
-    const { cartItems, paymentMethod, customer } = req.body;
+    const { cartItems, paymentMethod, customer, discount = 0 } = req.body;
 
     // Kiểm tra các thông tin cần thiết
     if (!cartItems || !paymentMethod || !customer || !customer.phone) {
@@ -34,10 +34,21 @@ const payment = async (req, res) => {
       totalAmount += item.totalPrice;
     }
 
-    // Tạo đối tượng Payment mới
+    // Tính toán tổng thanh toán sau khi áp giảm giá
+    const finalTotal = totalAmount - discount;
+    if (finalTotal <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Tổng thanh toán sau giảm giá không hợp lệ (âm hoặc bằng 0)",
+      });
+    }
+
+    // Tạo đối tượng Payment mới với thông tin giảm giá và tổng thanh toán sau giảm giá
     const newPayment = new Payment({
       cartItems,
       totalAmount,
+      discount,
+      finalTotal,
       paymentMethod,
       sendStatus: "Đang xử lí",
       orderStatus: "Chưa nhận",

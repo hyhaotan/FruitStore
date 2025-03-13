@@ -37,11 +37,6 @@ const UserModal = ({ targetRef, onClose, onLogout }) => {
               Lịch sử đơn hàng
             </Link>
           </li>
-          <li>
-            <Link to={ROUTER.USER.COUPON} onClick={onClose}>
-              Mã giảm giá
-            </Link>
-          </li>
           <li onClick={onLogout}>Logout</li>
         </ul>
       </div>
