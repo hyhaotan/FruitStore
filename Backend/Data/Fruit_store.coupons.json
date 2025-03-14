@@ -1,0 +1,54 @@
+[{
+  "_id": {
+    "$oid": "67d2d66b865b077c759e7e5d"
+  },
+  "code": "GIAM20K",
+  "discountPercentage": 20,
+  "active": true,
+  "expirationDate": {
+    "$date": "2025-03-14T00:00:00.000Z"
+  },
+  "createdAt": {
+    "$date": "2025-03-13T12:58:19.469Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-14T08:57:03.144Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67d2dcdd865b077c759e7ed4"
+  },
+  "code": "GIAM10K",
+  "discountPercentage": 10,
+  "active": true,
+  "expirationDate": {
+    "$date": "2025-03-12T00:00:00.000Z"
+  },
+  "createdAt": {
+    "$date": "2025-03-13T13:25:49.677Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-14T08:57:03.780Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67d2e1a5609eb5d06345bbc5"
+  },
+  "code": "GIAM30K",
+  "discountPercentage": 30,
+  "active": true,
+  "expirationDate": {
+    "$date": "2025-03-15T00:00:00.000Z"
+  },
+  "createdAt": {
+    "$date": "2025-03-13T13:46:13.118Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-14T08:57:04.719Z"
+  },
+  "__v": 0
+}]
