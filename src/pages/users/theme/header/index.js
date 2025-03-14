@@ -1,4 +1,5 @@
 import { memo, useEffect, useRef, useState } from "react";
+import axios from "axios";
 import "./style.scss";
 import {
   AiOutlineShoppingCart,
@@ -61,11 +62,39 @@ const Header = () => {
   // State điều khiển modal hiển thị dưới phần tên đăng nhập
   const [showUserModal, setShowUserModal] = useState(false);
 
+  // State cho giỏ hàng
+  const [cartItems, setCartItems] = useState([]);
+  const [cartTotal, setCartTotal] = useState(0);
+  const [cartQuantity, setCartQuantity] = useState(0);
+
   useEffect(() => {
     const isHome = location.pathname.length <= 1;
     setIsHome(isHome);
     setShowCategories(isHome);
   }, [location]);
+
+  useEffect(() => {
+    fetchCart();
+  }, []);
+
+  const fetchCart = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/carts");
+      const items = res.data; // Mảng các sản phẩm trong giỏ hàng
+      setCartItems(items);
+      // Tính tổng tiền: sum(quantity * price)
+      const total = items.reduce(
+        (acc, item) => acc + item.price * item.quantity,
+        0
+      );
+      // Tính tổng số lượng sản phẩm
+      const quantity = items.reduce((acc, item) => acc + item.quantity, 0);
+      setCartTotal(total);
+      setCartQuantity(quantity);
+    } catch (error) {
+      console.error("Error fetching cart:", error);
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -91,12 +120,12 @@ const Header = () => {
           <ul>
             <li>
               <Link to={ROUTER.USER.SHOPPING_CART}>
-                <AiOutlineShoppingCart /> <span>1</span>
+                <AiOutlineShoppingCart /> <span>{cartQuantity}</span>
               </Link>
             </li>
           </ul>
           <div className="header_cart_price">
-            Giỏ hàng: <span>{formater(1001230)}</span>
+            Giỏ hàng: <span>{formater(cartTotal)}</span>
           </div>
         </div>
         <div className="humberger_menu_widget">
@@ -273,13 +302,13 @@ const Header = () => {
           <div className="col-lg-3">
             <div className="header_cart">
               <div className="header_cart_price">
-                <span>{formater(200000)}</span>
+                <span>{formater(cartTotal)}</span>
               </div>
               <ul>
                 <li>
                   <Link to={ROUTER.USER.SHOPPING_CART}>
                     <AiOutlineShoppingCart />
-                    <span>5</span>
+                    <span>{cartQuantity}</span>
                   </Link>
                 </li>
               </ul>

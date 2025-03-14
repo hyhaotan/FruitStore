@@ -1,0 +1,33 @@
+.dashboard-page {
+  margin-left: 340px;
+  padding: 20px;
+  background: #f7f7f7;
+  min-height: 100vh;
+
+  h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+  }
+
+  .charts-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+
+    .chart-item {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      flex: 1;
+      min-width: 300px;
+
+      h2 {
+        margin-bottom: 15px;
+        font-size: 18px;
+        color: #555;
+      }
+    }
+  }
+}

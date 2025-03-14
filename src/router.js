@@ -20,6 +20,7 @@ import ArticlePage from "pages/users/articlePage";
 import NewsAdminPage from "pages/admin/newsPage";
 import NewsPage from "pages/users/newsPage";
 import CouponAdminPage from "pages/admin/couponPage";
+import DashboardPage from "pages/admin/dashboardPage";
 
 const renderUserRouter = () => {
   const userRouters = [
@@ -109,6 +110,10 @@ const renderAdminRouter = () => {
     {
       path: ROUTER.ADMIN.COUPON,
       component: <CouponAdminPage />,
+    },
+    {
+      path: ROUTER.ADMIN.DASHBOARD,
+      component: <DashboardPage />,
     },
   ];
 

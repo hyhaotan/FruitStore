@@ -1,76 +1,112 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import {
-  AiOutlineAccountBook,
-  AiOutlineInfo,
   AiOutlineLogout,
   AiOutlineProduct,
-  AiOutlineShoppingCart,
+  AiOutlineMenu,
+  AiOutlineClose,
+  AiOutlineDashboard,
+  AiOutlineOrderedList,
 } from "react-icons/ai";
-import { FaTicketAlt } from "react-icons/fa";
+import { FaNewspaper, FaTicketAlt, FaUsers } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ROUTER } from "utils/router";
 import "./style.scss";
-const HeaderAd = ({ children, ...props }) => {
+
+const SidebarAd = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+
   const navItems = [
     {
+      path: ROUTER.ADMIN.DASHBOARD,
+      label: "Bảng điều khiển",
+      icon: <AiOutlineDashboard />,
+    },
+    {
       path: ROUTER.ADMIN.ORDERS,
-      onClick: () => navigate(ROUTER.ADMIN.ORDERS),
-      lable: "Đặt hàng",
-      icon: <AiOutlineShoppingCart />,
+      label: "Đặt hàng",
+      icon: <AiOutlineOrderedList />,
     },
     {
       path: ROUTER.ADMIN.PRODUCTS,
-      onClick: () => navigate(ROUTER.ADMIN.PRODUCTS),
-      lable: "Sản phẩm",
+      label: "Sản phẩm",
       icon: <AiOutlineProduct />,
     },
     {
       path: ROUTER.ADMIN.NEWS,
-      onClick: () => navigate(ROUTER.ADMIN.NEWS),
-      lable: "Tin tức",
-      icon: <AiOutlineInfo />,
+      label: "Tin tức",
+      icon: <FaNewspaper />,
     },
     {
       path: ROUTER.ADMIN.ACCOUNT,
-      onClick: () => navigate(ROUTER.ADMIN.ACCOUNT),
-      lable: "Tài khoản",
-      icon: <AiOutlineAccountBook />,
+      label: "Tài khoản",
+      icon: <FaUsers />,
     },
     {
       path: ROUTER.ADMIN.COUPON,
-      onClick: () => navigate(ROUTER.ADMIN.COUPON),
-      lable: "Mã giảm giá",
+      label: "Mã giảm giá",
       icon: <FaTicketAlt />,
     },
     {
       path: ROUTER.ADMIN.LOGOUT,
-      onClick: () => navigate(ROUTER.ADMIN.LOGIN),
-      lable: "Đăng xuất",
+      label: "Đăng xuất",
       icon: <AiOutlineLogout />,
     },
   ];
+
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleNavItemClick = (path) => {
+    navigate(path);
+    // Trên mobile, sau khi nhấn vào mục điều hướng sẽ đóng sidebar
+    if (window.innerWidth <= 768) {
+      setIsOpen(false);
+    }
+  };
+
   return (
-    <div className="admin_header container" {...props}>
-      <nav className="admin_header_nav">
-        {navItems.map(({ path, onClick, lable, icon }) => (
-          <div
-            key={path}
-            className={`admin_header_nav-item ${
-              location.pathname.includes(path)
-                ? "admin_header_nav-item-active"
-                : ""
-            }`}
-            onClick={onClick}
-          >
-            <span className="admin_header_nav-icon">{icon}</span>
-            <span>{lable}</span>
+    <>
+      {/* Header dành cho mobile */}
+      <div className="mobile-header">
+        <button className="hamburger-btn" onClick={toggleSidebar}>
+          {isOpen ? <AiOutlineClose /> : <AiOutlineMenu />}
+        </button>
+        <h2>Admin Dashboard</h2>
+      </div>
+
+      <aside className={`admin-sidebar ${isOpen ? "open" : ""}`}>
+        <div className="sidebar-header">
+          <div className="logo">
+            <h2>Admin Dashboard</h2>
           </div>
-        ))}
-      </nav>
-    </div>
+          <div className="profile">
+            <img src="/path/to/avatar.jpg" alt="Admin Avatar" />
+            <span>Admin Name</span>
+          </div>
+        </div>
+        <nav className="sidebar-nav">
+          {navItems.map((item) => (
+            <div
+              key={item.path}
+              className={`nav-item ${
+                location.pathname.includes(item.path) ? "active" : ""
+              }`}
+              onClick={() => handleNavItemClick(item.path)}
+            >
+              <div className="icon">{item.icon}</div>
+              <span className="label">{item.label}</span>
+            </div>
+          ))}
+        </nav>
+      </aside>
+
+      {/* Overlay xuất hiện trên mobile khi sidebar mở */}
+      {isOpen && <div className="overlay" onClick={toggleSidebar}></div>}
+    </>
   );
 };
 
-export default memo(HeaderAd);
+export default memo(SidebarAd);

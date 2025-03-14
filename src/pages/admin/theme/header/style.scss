@@ -1,46 +1,141 @@
 @use "sass:map";
-@import "style/pages/all";
+@import "style/pages/all"; // Nếu bạn có file chứa biến theme như $theme-colors
 
-.admin_header {
-  background: white;
-  padding: 0;
-  position: sticky;
+.admin-sidebar {
+  background: #fff;
+  width: 300px;
+  height: 100vh;
+  position: fixed;
   top: 0;
-  z-index: 1;
+  left: 0;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  z-index: 200;
+  transition: transform 0.3s ease-in-out;
 
-  &_nav {
+  // Desktop: luôn hiện
+  @media (min-width: 769px) {
+    transform: translateX(0);
+  }
+
+  // Mobile: ẩn sidebar khi chưa mở
+  @media (max-width: 768px) {
+    transform: translateX(-100%);
+    &.open {
+      transform: translateX(0);
+    }
+  }
+
+  .sidebar-header {
+    margin-bottom: 30px;
+    text-align: center;
+
+    .logo h2 {
+      margin: 0;
+      font-size: 20px;
+      color: map.get($theme-colors, "main", #3182ce);
+    }
+
+    .profile {
+      margin-top: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid map.get($theme-colors, "main", #3182ce);
+      }
+
+      span {
+        margin-top: 8px;
+        font-size: 14px;
+        color: map.get($theme-colors, "normal-text", #555);
+      }
+    }
+  }
+
+  .sidebar-nav {
     display: flex;
-    gap: 16px;
-    align-items: center;
-    height: 100px;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
 
-    &-item {
+    .nav-item {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 12px 24px;
-      color: map.get($theme-colors, "normal-text");
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 15px;
-      transition: all 0.2s ease;
-      border-radius: 6px;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      color: map.get($theme-colors, "normal-text", #555);
       cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+      font-size: 15px;
 
       &:hover {
-        background: #3182ce14;
-        color: map.get($theme-colors, "main");
+        background: #f0f4ff;
+        color: map.get($theme-colors, "main", #3182ce);
       }
 
-      &-active {
-        background: #3182ce14;
-        color: map.get($theme-colors, "main");
+      &.active {
+        background: #e0e7ff;
+        color: map.get($theme-colors, "main", #3182ce);
+        font-weight: 600;
+      }
+
+      .icon {
+        font-size: 20px;
       }
     }
+  }
+}
 
-    &-icon {
-      display: flex;
-      align-items: center;
+// Mobile header hiển thị nút hamburger
+.mobile-header {
+  display: none;
+  @media (max-width: 768px) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    padding: 10px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 150;
+
+    h2 {
+      font-size: 18px;
+      margin: 0;
     }
+
+    .hamburger-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+    }
+  }
+}
+
+// Overlay hiện khi sidebar mở trên mobile
+.overlay {
+  display: none;
+  @media (max-width: 768px) {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 100;
   }
 }

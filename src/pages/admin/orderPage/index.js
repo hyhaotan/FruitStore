@@ -165,8 +165,16 @@ const PaymentTable = () => {
                     {new Date(payment.createdAt).toLocaleDateString("vi-VN")}
                   </td>
                   <td>
-                    <button onClick={() => handleView(payment)}>Xem</button>
-                    <button onClick={() => handleDelete(payment._id)}>
+                    <button
+                      className="btn_view"
+                      onClick={() => handleView(payment)}
+                    >
+                      Xem
+                    </button>
+                    <button
+                      className="btn_delete"
+                      onClick={() => handleDelete(payment._id)}
+                    >
                       Xóa
                     </button>
                   </td>
