@@ -17,6 +17,7 @@ import ProductPage from "pages/admin/productPage";
 import AccountPage from "pages/admin/accountPage";
 import ContactPage from "pages/users/contactPage";
 import ArticlePage from "pages/users/articlePage";
+import ArticleAdminPage from "pages/admin/articlePage";
 import NewsAdminPage from "pages/admin/newsPage";
 import NewsPage from "pages/users/newsPage";
 import CouponAdminPage from "pages/admin/couponPage";
@@ -110,6 +111,10 @@ const renderAdminRouter = () => {
     {
       path: ROUTER.ADMIN.COUPON,
       component: <CouponAdminPage />,
+    },
+    {
+      path: ROUTER.ADMIN.ARTICLES,
+      component: <ArticleAdminPage />,
     },
     {
       path: ROUTER.ADMIN.DASHBOARD,

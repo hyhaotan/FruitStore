@@ -1,0 +1,81 @@
+@use "sass:map";
+@import "style/pages/all"; // Import biến, mixin và reset từ file all.scss
+
+// Container mở rộng chiều rộng
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.articles {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  font-family: "Roboto", sans-serif;
+
+  h2 {
+    margin-bottom: 20px;
+    color: map.get($theme-colors, "normal-text");
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 20px;
+    border-radius: 8px;
+
+    thead {
+      background: map.get($theme-colors, "main");
+      color: #fff;
+      th {
+        padding: 15px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+    }
+
+    tbody {
+      tr {
+        &:nth-child(even) {
+          background: #f9f9f9;
+        }
+        &:hover {
+          background: #f1f1f1;
+        }
+      }
+      td {
+        padding: 15px;
+        text-align: center;
+        vertical-align: middle;
+        border-bottom: 1px solid #ebebeb;
+      }
+    }
+  }
+
+  // Phần hành động (ở đây có nút "Xóa")
+  &__action {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .btn_delete {
+    background: red;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+
+  .btn_delete:hover {
+    background: darken(red, 10%);
+    transition: all 0.3s;
+  }
+}

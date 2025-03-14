@@ -13,6 +13,7 @@ const MasterAdLayout = ({ children, ...props }) => {
   const isNewsPage = location.pathname.startsWith(ROUTER.ADMIN.NEWS);
   const isCouponPage = location.pathname.startsWith(ROUTER.ADMIN.COUPON);
   const isDashboardPage = location.pathname.startsWith(ROUTER.ADMIN.DASHBOARD);
+  const isArticlePage = location.pathname.startsWith(ROUTER.ADMIN.ARTICLES);
 
   return (
     <div {...props}>
@@ -24,7 +25,8 @@ const MasterAdLayout = ({ children, ...props }) => {
         !isAccountPage &&
         !isNewsPage &&
         !isCouponPage &&
-        !isDashboardPage && <Footer />}
+        !isDashboardPage &&
+        !isArticlePage && <Footer />}
     </div>
   );
 };

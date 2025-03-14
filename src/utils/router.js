@@ -24,6 +24,7 @@ export const ROUTER = {
     ACCOUNT: `${ADMIN_PATH}/tai-khoan`,
     NEWS: `${ADMIN_PATH}/tin-tuc`,
     COUPON: `${ADMIN_PATH}/giam-gia`,
+    ARTICLES: `${ADMIN_PATH}/bai-viet`,
     DASHBOARD: `${ADMIN_PATH}/dieu-khien`,
   },
 };

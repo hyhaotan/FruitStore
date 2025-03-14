@@ -34,6 +34,11 @@ const SidebarAd = () => {
       icon: <AiOutlineProduct />,
     },
     {
+      path: ROUTER.ADMIN.ARTICLES,
+      label: "Bài viết",
+      icon: <FaTicketAlt />,
+    },
+    {
       path: ROUTER.ADMIN.NEWS,
       label: "Tin tức",
       icon: <FaNewspaper />,

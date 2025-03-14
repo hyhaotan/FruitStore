@@ -1,4 +1,5 @@
 import { memo } from "react";
+import { useNavigate } from "react-router-dom";
 import "./style.scss";
 import { AiOutlineShoppingCart, AiOutlineEye } from "react-icons/ai";
 import { generatePath, Link } from "react-router-dom";
@@ -7,7 +8,16 @@ import { ROUTER } from "utils/router";
 import axios from "axios";
 
 const ProductCard = ({ id, image, name, price }) => {
+  const navigate = useNavigate();
+
   const handleAddCart = async () => {
+    const user = localStorage.getItem("user");
+    if (!user) {
+      alert("Vui lòng bạn đăng nhập trước khi mua hàng!");
+      navigate(ROUTER.USER.LOGIN);
+      return;
+    }
+
     try {
       const response = await axios.post("http://localhost:5000/api/carts", {
         productId: id,
