@@ -128,9 +128,9 @@ const PaymentTable = () => {
               {payments.map((payment) => (
                 <tr key={payment._id}>
                   <td>{payment._id}</td>
-                  <td>{formater(payment.totalAmount)}</td>
+                  <td>{formater(payment.finalTotal)}</td> {/* Sửa ở đây */}
                   <td>{payment.paymentMethod}</td>
-                  {/* Cột hiển thị trạng thái gửi đơn */}
+                  {/* Các cột khác */}
                   <td>
                     <div className="orders__dropdown">
                       <button

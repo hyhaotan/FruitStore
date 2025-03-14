@@ -157,7 +157,7 @@ const CheckoutPage = () => {
                   Điện thoại: <span className="required">*</span>
                 </label>
                 <input
-                  type="text"
+                  type="number"
                   placeholder="Nhập số điện thoại"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}

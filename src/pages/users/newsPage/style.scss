@@ -1,0 +1,72 @@
+$primary-color: #3498db;
+$secondary-color: #2c3e50;
+$background-color: #ffffff;
+$text-color: #333;
+$base-padding: 20px;
+$max-width: 800px;
+$border-radius: 5px;
+
+.news-detail {
+  max-width: $max-width;
+  margin: 2rem auto;
+  padding: $base-padding;
+  background-color: $background-color;
+  border-radius: $border-radius;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: "Helvetica Neue", sans-serif;
+  color: $text-color;
+
+  h1 {
+    color: $secondary-color;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .news-image {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto 1rem;
+    border-radius: $border-radius;
+  }
+
+  .news-content {
+    line-height: 1.6;
+    font-size: 1rem;
+
+    p {
+      margin-bottom: 1rem;
+    }
+
+    a {
+      color: $primary-color;
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+      margin: 1rem auto;
+      border-radius: $border-radius;
+    }
+  }
+}
+
+// Responsive cho các màn hình nhỏ hơn (mobile)
+@media screen and (max-width: 768px) {
+  .news-detail {
+    padding: $base-padding / 2;
+
+    h1 {
+      font-size: 1.5rem;
+    }
+
+    .news-content {
+      font-size: 0.9rem;
+    }
+  }
+}

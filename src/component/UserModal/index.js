@@ -29,7 +29,7 @@ const UserModal = ({ targetRef, onClose, onLogout }) => {
         <ul>
           <li>
             <Link to={ROUTER.USER.PROFILE} onClick={onClose}>
-              Profile
+              Thông tin cá nhân
             </Link>
           </li>
           <li>
@@ -37,7 +37,7 @@ const UserModal = ({ targetRef, onClose, onLogout }) => {
               Lịch sử đơn hàng
             </Link>
           </li>
-          <li onClick={onLogout}>Logout</li>
+          <li onClick={onLogout}>Đăng xuất</li>
         </ul>
       </div>
     </div>,
