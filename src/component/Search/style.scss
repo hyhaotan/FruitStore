@@ -1,0 +1,9 @@
+@use "sass:map";
+@import "style/pages/all";
+
+.btn_search {
+  background: map.get($theme-colors, "main");
+  color: #ffffff;
+  border: none;
+  padding: 10px 15px;
+}

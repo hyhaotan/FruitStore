@@ -19,6 +19,8 @@ import { formater } from "utils/formater";
 import { ROUTER } from "utils/router";
 import { BiUser } from "react-icons/bi";
 import UserModal from "component/UserModal";
+import SearchComponent from "component/Search";
+import "../../../../component/Search/style.scss";
 
 export const categories = [
   "Thịt tươi",
@@ -80,14 +82,12 @@ const Header = () => {
   const fetchCart = async () => {
     try {
       const res = await axios.get("http://localhost:5000/api/carts");
-      const items = res.data; // Mảng các sản phẩm trong giỏ hàng
+      const items = res.data;
       setCartItems(items);
-      // Tính tổng tiền: sum(quantity * price)
       const total = items.reduce(
         (acc, item) => acc + item.price * item.quantity,
         0
       );
-      // Tính tổng số lượng sản phẩm
       const quantity = items.reduce((acc, item) => acc + item.quantity, 0);
       setCartTotal(total);
       setCartQuantity(quantity);
@@ -171,7 +171,6 @@ const Header = () => {
                     {menu.child.map((childItem, childkey) => (
                       <li key={childkey}>
                         <Link
-                          // Mỗi mục con chuyển hướng đến trang Products với query parameter category
                           to={`${
                             ROUTER.USER.PRODUCTS
                           }?category=${encodeURIComponent(childItem.name)}`}
@@ -283,7 +282,6 @@ const Header = () => {
                         {menu.child.map((childItem, childKey) => (
                           <li key={`${menuKey}-${childKey}`}>
                             <Link
-                              // Link của menu con chuyển hướng sang trang Products với query parameter category
                               to={`${
                                 ROUTER.USER.PRODUCTS
                               }?category=${encodeURIComponent(childItem.name)}`}
@@ -320,7 +318,7 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Hero Section */}
+      {/* Hero Section với phần tìm kiếm tích hợp SearchComponent */}
       <div className="container">
         <div className="row hero_categories_container">
           <div className="col-lg-3 col-md-12 col-sm-12 col-xs-12 hero_categories">
@@ -335,7 +333,6 @@ const Header = () => {
               {categories.map((category, key) => (
                 <li key={key}>
                   <Link
-                    // Mỗi danh mục chuyển hướng sang trang Products với query parameter category
                     to={`${ROUTER.USER.PRODUCTS}?category=${encodeURIComponent(
                       category
                     )}`}
@@ -349,10 +346,8 @@ const Header = () => {
           <div className="col-lg-9 col-sm-12 col-xs-12 col-md-12 hero_search_container">
             <div className="hero_search">
               <div className="hero_search_form">
-                <form>
-                  <input type="text" placeholder="Bạn đang tìm gì?" />
-                  <button type="submit">Tìm kiếm</button>
-                </form>
+                {/* Thay thế form tĩnh bằng SearchComponent */}
+                <SearchComponent placeholder="Bạn đang tìm gì?" />
               </div>
               <div className="hero_search_phone">
                 <div className="hero_search_phone_icon">
