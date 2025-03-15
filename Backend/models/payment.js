@@ -43,7 +43,7 @@ const PaymentSchema = new mongoose.Schema(
     },
     paymentMethod: {
       type: String,
-      enum: ["Tiền mặc", "Thẻ tín dụng", "Chuyển khoản"],
+      enum: ["Tiền mặt", "Thẻ tín dụng", "Chuyển khoản"],
       required: [true, "Payment method is required"],
     },
     sendStatus: {
@@ -84,28 +84,29 @@ const PaymentSchema = new mongoose.Schema(
   }
 );
 
+// Trước khi lưu, tính toán lại tổng tiền và finalTotal
 PaymentSchema.pre("save", function (next) {
-  // Tính toán totalPrice cho từng sản phẩm nếu chưa có
+  // Tính totalPrice cho từng sản phẩm nếu chưa có
   this.cartItems.forEach((item) => {
     if (!item.totalPrice) {
       item.totalPrice = item.quantity * item.price;
     }
   });
 
-  // Tính toán tổng tiền ban đầu
+  // Tính tổng số tiền ban đầu
   this.totalAmount = this.cartItems.reduce(
     (acc, item) => acc + item.totalPrice,
     0
   );
 
-  // Tính toán finalTotal = totalAmount - discount
+  // Tính finalTotal = totalAmount - discount
   this.finalTotal = this.totalAmount - this.discount;
 
   if (isNaN(this.totalAmount) || this.totalAmount < 0) {
     return next(new Error("Invalid totalAmount"));
   }
-  if (isNaN(this.finalTotal) || this.finalTotal < 0) {
-    return next(new Error("Final total must be greater than or equal to 0"));
+  if (isNaN(this.finalTotal) || this.finalTotal <= 0) {
+    return next(new Error("Final total must be greater than 0"));
   }
   next();
 });

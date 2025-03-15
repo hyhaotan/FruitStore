@@ -34,7 +34,7 @@ const payment = async (req, res) => {
       totalAmount += item.totalPrice;
     }
 
-    // Tính toán tổng thanh toán sau khi áp giảm giá
+    // Tính toán finalTotal trên server
     const finalTotal = totalAmount - discount;
     if (finalTotal <= 0) {
       return res.status(400).json({
@@ -43,7 +43,7 @@ const payment = async (req, res) => {
       });
     }
 
-    // Tạo đối tượng Payment mới với thông tin giảm giá và tổng thanh toán sau giảm giá
+    // Tạo đối tượng Payment mới với dữ liệu được chuẩn hóa
     const newPayment = new Payment({
       cartItems,
       totalAmount,
@@ -55,7 +55,7 @@ const payment = async (req, res) => {
       customer: {
         name: customer.name,
         email: customer.email,
-        phonenumber: customer.phone,
+        phonenumber: Number(customer.phone), // Ép kiểu sang Number
         address: customer.address,
         note: customer.note || "",
       },
@@ -106,7 +106,7 @@ const confirmOrder = async (req, res) => {
       });
     }
 
-    // Cập nhật trạng thái đơn hàng thành "received"
+    // Cập nhật trạng thái đơn hàng thành "Đã nhận"
     payment.orderStatus = "Đã nhận";
     const updatedPayment = await payment.save();
 
@@ -141,7 +141,6 @@ const editSendOrder = async (req, res) => {
       });
     }
 
-    // Gửi phản hồi khi cập nhật thành công
     return res.json({
       success: true,
       message: "Cập nhật trạng thái gửi đơn thành công",
@@ -159,7 +158,6 @@ const deleteOrder = async (req, res) => {
   try {
     const { paymentId } = req.params;
 
-    // Tìm đơn hàng theo id
     const payment = await Payment.findById(paymentId);
     if (!payment) {
       return res.status(404).json({
@@ -170,7 +168,6 @@ const deleteOrder = async (req, res) => {
 
     await Payment.findByIdAndDelete(paymentId);
 
-    // Gửi phản hồi thành công về phía client
     res.json({
       success: true,
       message: "Đã xóa đơn hàng",
