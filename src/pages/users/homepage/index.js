@@ -13,6 +13,7 @@ import banner1 from "assets/users/images/banner/banner1.jpg";
 import banner2 from "assets/users/images/banner/banner2.jpg";
 import ProductCard from "component/ProductCard";
 import NewsSection from "component/News";
+import Partner from "component/Partner";
 import axios from "axios";
 
 const HomePage = () => {
@@ -110,6 +111,12 @@ const HomePage = () => {
         </div>
       </div>
       {/* Banner End */}
+
+      {/*partner belive Begin*/}
+      <div className="container">
+        <Partner/>
+      </div>
+      {/*partner belive End*/}
     </>
   );
 };

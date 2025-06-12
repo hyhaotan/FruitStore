@@ -22,6 +22,7 @@ import NewsAdminPage from "pages/admin/newsPage";
 import NewsPage from "pages/users/newsPage";
 import CouponAdminPage from "pages/admin/couponPage";
 import DashboardPage from "pages/admin/dashboardPage";
+import RequireAdmin from "./component/Admin/requireAdmin"
 
 const renderUserRouter = () => {
   const userRouters = [
@@ -123,7 +124,7 @@ const renderAdminRouter = () => {
   ];
 
   return (
-    <MasterAdLayout>
+ <MasterAdLayout>
       <Routes>
         {adminRouters.map((item, key) => (
           <Route key={key} path={item.path} element={item.component} />

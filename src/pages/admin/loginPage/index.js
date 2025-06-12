@@ -13,19 +13,30 @@ const LoginAdPage = () => {
     const password = formData.get("password");
 
     try {
-      const response = await fetch("http://localhost:5000/api/admins/login", {
+      const response = await fetch("http://localhost:5000/api/users/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
       });
-      const result = await response.json();
-      if (response.ok) {
-        alert(result.message || "Đăng nhập thành công");
+
+      const { message, user } = await response.json();
+
+      if (!response.ok) {
+        // Nếu server trả về lỗi (401, 500, ...)
+        alert(message || "Đăng nhập thất bại");
+        return;
+      }
+
+      // Kiểm tra quyền
+      if (user && (user.role === "admin" || user.role === "employee")) {
+        // Lưu token hoặc session nếu cần
+        // localStorage.setItem('token', result.token);
+        alert("đăng nhập thành công")
         navigate(ROUTER.ADMIN.ORDERS);
       } else {
-        alert(result.message || "Đăng nhập thất bại");
+        alert("Bạn không có quyền truy cập");
       }
     } catch (error) {
       console.error("Error during login:", error);

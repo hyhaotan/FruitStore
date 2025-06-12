@@ -1,4 +1,6 @@
 const User = require("../models/user");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 
 const getAllUsers = async (req, res) => {
@@ -38,6 +40,7 @@ const registerUser = async (req, res) => {
       email,
       username,
       password,
+      role:"user",
     });
 
     return res.status(200).json({ user });
@@ -55,6 +58,34 @@ const loginUser = async (req, res) => {
     }
     return res.status(200).json({ user });
   } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+const loginAdmin = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const adminUser = await User.findOne({
+      email,
+      password,
+      role: { $in: ["admin", "employee"] }
+    });
+    if (!adminUser) {
+      return res.status(401).json({
+        message: "Email/mật khẩu không đúng hoặc bạn không có quyền truy cập"
+      });
+    }
+    // Nếu dùng JWT thì phát token ở đây
+    return res.status(200).json({
+      message: "Đăng nhập thành công",
+      user: { 
+        _id: adminUser._id,
+        email: adminUser.email,
+        role: adminUser.role
+      }
+    });
+  } catch (error) {
+    console.error("Error in loginAdmin:", error);
     return res.status(500).json({ message: error.message });
   }
 };
@@ -140,6 +171,33 @@ const editPassword = async (req, res) => {
   }
 };
 
+const editRole = async (req, res) => {
+  const { id } = req.params;
+  const { role } = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "ID không hợp lệ" });
+  }
+  if (!["user","employee","admin"].includes(role)) {
+    return res.status(400).json({ message: "Role không hợp lệ" });
+  }
+
+  try {
+    const user = await User.findByIdAndUpdate(
+      id,
+      { role },
+      { new: true }
+    );
+    if (!user) {
+      return res.status(404).json({ message: "Không tìm thấy người dùng" });
+    }
+    return res.status(200).json({ user });
+  } catch (error) {
+    console.error("Lỗi khi cập nhật role:", error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   loginUser,
   registerUser,
@@ -149,4 +207,6 @@ module.exports = {
   editEmail,
   getAllUsers,
   deleteUser,
+  editRole,
+  loginAdmin,
 };

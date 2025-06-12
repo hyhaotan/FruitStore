@@ -11,6 +11,7 @@ const RegisterPage = () => {
     email: "",
     password: "",
     confirmPassword: "",
+    role:"user",
   });
 
   const handleChange = (e) => {

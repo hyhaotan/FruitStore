@@ -3,8 +3,8 @@ import "./style.scss";
 
 const UserTable = () => {
   const [users, setUsers] = useState([]);
+  const ROLES = ["user", "employee", "admin"];
 
-  // Fetch danh sách người dùng khi component được mount
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -22,29 +22,49 @@ const UserTable = () => {
     fetchUsers();
   }, []);
 
-  // Hàm xóa người dùng
   const handleDelete = async (userId) => {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/api/users/${userId}`,
-        {
-          method: "DELETE",
+    if (window.confirm("Bạn có chắc là muốn xóa người dùng này không?")) {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/users/${userId}`,
+          { method: "DELETE" }
+        );
+        if (!response.ok) {
+          throw new Error("Error deleting user");
         }
-      );
-      if (!response.ok) {
-        throw new Error("Error deleting user");
+        setUsers(prev => prev.filter(user => user._id !== userId));
+      } catch (error) {
+        console.error("Error deleting user:", error);
       }
-      // Cập nhật lại danh sách sau khi xóa thành công
-      setUsers((prevUsers) => prevUsers.filter((user) => user._id !== userId));
+    }
+  };
+
+  const handleRoleChange = async (userId, role) => {
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/users/${userId}/role`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ role })
+        },
+        alert("Cập nhật role thành công!"),
+      );
+      if (!res.ok) throw new Error("Failed to update role");
+      const { user: updatedUser } = await res.json();
+      setUsers(prev =>
+        prev.map(u => (u._id === updatedUser._id ? updatedUser : u))
+      );
     } catch (error) {
-      console.error("Error deleting user:", error);
+      console.error("Error updating role:", error);
+      alert("Không thể cập nhật role");
     }
   };
 
   return (
     <div className="container">
       <div className="users">
-        <h2>Quản lý người dùng</h2>
+        <h2>Quản lý người dùng & Phân quyền</h2>
         <div className="users__content">
           <table className="users__table">
             <thead>
@@ -52,17 +72,35 @@ const UserTable = () => {
                 <th>ID</th>
                 <th>Email</th>
                 <th>Username</th>
+                <th>Role</th>
                 <th>Hành động</th>
               </tr>
             </thead>
             <tbody>
-              {users.map((user) => (
+              {users.map(user => (
                 <tr key={user._id}>
                   <td>{user._id}</td>
                   <td>{user.email}</td>
                   <td>{user.username}</td>
                   <td>
-                    <button className="btn_delete" onClick={() => handleDelete(user._id)}>Xóa</button>
+                    <select
+                      value={user.role}
+                      onChange={e => handleRoleChange(user._id, e.target.value)}
+                    >
+                      {ROLES.map(r => (
+                        <option key={r} value={r}>
+                          {r.charAt(0).toUpperCase() + r.slice(1)}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                  <td className="users__action">
+                    <button
+                      className="btn_delete"
+                      onClick={() => handleDelete(user._id)}
+                    >
+                      Xóa
+                    </button>
                   </td>
                 </tr>
               ))}

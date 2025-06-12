@@ -8,6 +8,7 @@ const initialProductForm = {
   price: 0,
   quantity: 0,
   type: "",
+  expiryDate: "",
   status: "Có sẵn",
   description: "",
 };
@@ -20,19 +21,20 @@ const ProductManagement = () => {
   // Khi mở modal (thêm/sửa), cập nhật dữ liệu form từ selectedProduct
   useEffect(() => {
     if (selectedProduct && Object.keys(selectedProduct).length > 0) {
-      // Trường hợp chỉnh sửa sản phẩm
       setProductForm({
         name: selectedProduct.name || "",
         image: selectedProduct.image || "",
         price: selectedProduct.price || 0,
         quantity: selectedProduct.quantity || 0,
         type: selectedProduct.type || "",
+        expiryDate: selectedProduct.expiryDate
+          ? selectedProduct.expiryDate.substring(0, 10)
+          : "",
         status: selectedProduct.status || "Có sẵn",
         description: selectedProduct.description || "",
         _id: selectedProduct._id,
       });
     } else {
-      // Trường hợp thêm sản phẩm mới hoặc khi đóng modal
       setProductForm(initialProductForm);
     }
   }, [selectedProduct]);
@@ -121,16 +123,19 @@ const ProductManagement = () => {
     }
   };
 
-  // Cập nhật giá trị form khi người dùng nhập (cho các input text, number,...)
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProductForm((prev) => ({
+    setProductForm(prev => ({
       ...prev,
-      [name]: name === "price" || name === "quantity" ? Number(value) : value,
+      [name]:
+        name === "price" || name === "quantity"
+          ? Number(value)
+          : name === "expiryDate"
+            ? value
+            : value,
     }));
   };
 
-  // Xử lý chọn file ảnh và chuyển đổi sang Base64
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -168,6 +173,7 @@ const ProductManagement = () => {
                 <th>Loại</th>
                 <th>Trạng thái</th>
                 <th>Mô tả</th>
+                <th>Hạn sử dụng</th>
                 <th>Hành động</th>
               </tr>
             </thead>
@@ -189,6 +195,11 @@ const ProductManagement = () => {
                     <td>{product.type}</td>
                     <td>{product.status}</td>
                     <td>{product.description}</td>
+                    <td>
+                      {product.expiryDate
+                        ? new Date(product.expiryDate).toLocaleDateString("vi-VN")
+                        : "-"}
+                    </td>
                     <td>
                       <button
                         className="btn btn--edit"
@@ -284,6 +295,15 @@ const ProductManagement = () => {
                     type="text"
                     name="type"
                     value={productForm.type}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Hạn sử dụng</label>
+                  <input
+                    type="date"
+                    name="expiryDate"
+                    value={productForm.expiryDate}
                     onChange={handleChange}
                   />
                 </div>

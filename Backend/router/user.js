@@ -6,14 +6,18 @@ const {
   editPassword,
   editUsername,
   editEmail,
+  editRole,
   getAllUsers,
   deleteUser,
+  loginAdmin,
 } = require("../controllers/user");
 const router = express.Router();
 
 router.get("/api/users", getAllUsers);
 router.delete("/api/users/:id", deleteUser);
 router.post("/api/users/login", loginUser);
+router.post("/api/users/login", loginAdmin);
+router.patch("/api/users/:id/:role", editRole);
 router.post("/api/users/register", registerUser);
 router.get("/api/users/profile/:id", getUserProfile);
 router.put("/api/users/editPassword/:id", editPassword);

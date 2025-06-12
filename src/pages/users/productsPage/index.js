@@ -1,4 +1,4 @@
-import { memo, useState, useEffect } from "react";
+import { memo, useState, useEffect, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Breadcrumb from "../theme/breadcrumb";
 import "./style.scss";
@@ -11,14 +11,15 @@ import SearchComponent from "component/Search";
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
+  const [sortBy, setSortBy] = useState(""); // Giá thấp->cao, cao->thấp
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Lấy giá trị query parameter 'category' từ URL (nếu bạn có sử dụng cho các mục đích khác)
+  // Lấy query 'category'
   const searchParams = new URLSearchParams(location.search);
   const productType = searchParams.get("category");
 
-  // Các tùy chọn sắp xếp (nếu cần)
+  // Các tùy chọn sắp xếp
   const sorts = [
     "Giá thấp đến cao",
     "Giá cao đến thấp",
@@ -28,6 +29,7 @@ const ProductsPage = () => {
     "Giảm giá",
   ];
 
+  // Lấy danh sách sản phẩm theo loại
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -40,39 +42,57 @@ const ProductsPage = () => {
       }
     };
     fetchProducts();
+    setSortBy(""); // reset sort khi đổi category
   }, [productType]);
 
-  // Xử lý lọc sản phẩm theo mức giá
+  // Lọc theo giá
   const handlePriceFilter = async () => {
     try {
+      const min = document.getElementById("minPrice").value;
+      const max = document.getElementById("maxPrice").value;
       const response = await axios.get("http://localhost:5000/api/products", {
-        params: {
-          minPrice: document.getElementById("minPrice").value,
-          maxPrice: document.getElementById("maxPrice").value,
-        },
+        params: { minPrice: min, maxPrice: max, ...(productType && { type: productType }) },
       });
       setProducts(response.data);
+      setSortBy("");
     } catch (error) {
       console.error("Price filter failed:", error);
     }
   };
 
-  const renderProducts = () => {
-    return (
-      <div className="row">
-        {products.map((item) => (
-          <div className="col-lg-4 col-md-4 col-sm-6 col-xs-12" key={item._id}>
-            <ProductCard
-              id={item._id}
-              image={item.image}
-              name={item.name}
-              price={item.price}
-            />
-          </div>
-        ))}
-      </div>
-    );
-  };
+  // Sắp xếp client-side
+  const sortedProducts = useMemo(() => {
+    if (!sortBy) return products;
+    const list = [...products];
+    switch (sortBy) {
+      case "Giá thấp đến cao":
+        return list.sort((a, b) => a.price - b.price);
+      case "Giá cao đến thấp":
+        return list.sort((a, b) => b.price - a.price);
+      case "Mới đến cũ":
+        return list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      case "Cũ đến mới":
+        return list.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+      // TODO: Bán chạy nhất, Giảm giá nếu có dữ liệu
+      default:
+        return list;
+    }
+  }, [products, sortBy]);
+
+  const renderProducts = () => (
+    <div className="row">
+      {sortedProducts.map((item) => (
+        <div className="col-lg-4 col-md-4 col-sm-6 col-xs-12" key={item._id}>
+          <ProductCard
+            id={item._id}
+            image={item.image}
+            name={item.name}
+            price={item.price}
+          />
+        </div>
+      ))}
+    </div>
+  );
 
   return (
     <>
@@ -84,7 +104,6 @@ const ProductsPage = () => {
             <div className="sidebar">
               <div className="sidebar_item">
                 <h2>Tìm kiếm</h2>
-                {/* Sử dụng SearchComponent */}
                 <SearchComponent placeholder="Tìm kiếm sản phẩm..." />
               </div>
               <div className="sidebar_item">
@@ -108,8 +127,9 @@ const ProductsPage = () => {
                 <div className="tags">
                   {sorts.map((item, key) => (
                     <div
-                      className={`tag ${key === 0 ? "active" : ""}`}
+                      className={`tag ${sortBy === item ? "active" : ""}`}
                       key={key}
+                      onClick={() => setSortBy(item)}
                     >
                       {item}
                     </div>
@@ -121,11 +141,7 @@ const ProductsPage = () => {
                 <ul>
                   {categories.map((name, key) => (
                     <li key={key}>
-                      <Link
-                        to={`${
-                          ROUTER.USER.PRODUCTS
-                        }?category=${encodeURIComponent(name)}`}
-                      >
+                      <Link to={`${ROUTER.USER.PRODUCTS}?category=${encodeURIComponent(name)}`}>
                         {name}
                       </Link>
                     </li>

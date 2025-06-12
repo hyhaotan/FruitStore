@@ -23,26 +23,48 @@ const getProductDetails = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   try {
+    // Destructure từ body, bao gồm expiryDate
+    const {
+      name,
+      image,
+      price,
+      quantity,
+      status,
+      description,
+      type,
+      expiryDate,
+    } = req.body;
+
     const updateData = {
-      name: req.body.name,
-      image: req.body.image,
-      price: req.body.price,
-      quantity: req.body.quantity,
-      status: req.body.status,
-      description: req.body.description,
-      type: req.body.type,
+      name,
+      image,
+      price,
+      quantity,
+      status,
+      description,
+      type,
     };
+
+    // Chỉ thêm expiryDate nếu client truyền
+    if (expiryDate) {
+      updateData.expiryDate = new Date(expiryDate);
+    } else {
+      // Nếu muốn xóa hạn sử dụng khi không truyền thì uncomment:
+      // updateData.expiryDate = null;
+    }
+
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
       updateData,
       { new: true }
     );
+
     if (!updatedProduct) {
       return res.status(404).json({ message: "Cannot find product" });
     }
     res.json(updatedProduct);
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
 
@@ -60,15 +82,29 @@ const deleteProduct = async (req, res) => {
 
 const createProduct = async (req, res) => {
   try {
+    const {
+      name,
+      image,
+      price,
+      quantity = 0,
+      status = "Có sẵn",
+      description,
+      type,
+      expiryDate,
+    } = req.body;
+
     const product = new Product({
-      name: req.body.name,
-      image: req.body.image,
-      price: req.body.price,
-      quantity: req.body.quantity || 0,
-      status: req.body.status || "Có sẵn",
-      description: req.body.description,
-      type: req.body.type,
+      name,
+      image,
+      price,
+      quantity,
+      status,
+      description,
+      type,
+      // Chỉ thêm expiryDate nếu có
+      ...(expiryDate && { expiryDate: new Date(expiryDate) }),
     });
+
     const newProduct = await product.save();
     res.status(201).json(newProduct);
   } catch (err) {

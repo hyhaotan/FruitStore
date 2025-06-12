@@ -115,6 +115,10 @@ const ProductsDetailPage = () => {
                 <b>Số lượng:</b> <span>{product.quantity}</span>
               </li>
               <li>
+                <b>Loại: </b>
+                <span>{product.type}</span>
+              </li>
+              <li>
                 <b>Chia sẻ:</b>{" "}
                 <span>
                   <AiOutlineFacebook />

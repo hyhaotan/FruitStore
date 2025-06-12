@@ -13,6 +13,9 @@ const productSchema = new mongoose.Schema({
   infomation_detail: { type: String },
   description: { type: String },
   type: { type: String },
+   expiryDate: { type: Date, required: true },
+}, {
+  timestamps: true
 });
 
 module.exports = mongoose.model("Product", productSchema);
