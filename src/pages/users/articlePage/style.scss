@@ -27,7 +27,7 @@
 
   .article-list {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); // 4 cột đều nhau
+    grid-template-columns: repeat(4, 1fr);
     gap: 20px;
     margin-top: 20px;
 
@@ -43,6 +43,12 @@
       .author {
         font-style: italic;
         color: #666;
+        margin-bottom: 5px;
+      }
+
+      .date {
+        font-size: 14px;
+        color: #999;
         margin-bottom: 10px;
       }
 
@@ -53,24 +59,18 @@
   }
 }
 
-// Responsive cho thiết bị nhỏ hơn
 @media screen and (max-width: 768px) {
-  .article-page {
-    .article-list {
-      grid-template-columns: repeat(2, 1fr);
-    }
+  .article-page .article-list {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media screen and (max-width: 480px) {
-  .article-page {
-    .article-list {
-      grid-template-columns: 1fr;
-    }
+  .article-page .article-list {
+    grid-template-columns: 1fr;
   }
 }
 
-/* Modal styles */
 .modal-overlay {
   position: fixed;
   top: 0;

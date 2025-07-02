@@ -35,21 +35,23 @@ const CouponAdminPage = () => {
   }, []);
 
   const handleDelete = async (couponId) => {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/api/coupons/${couponId}`,
-        {
-          method: "DELETE",
+    if (window.confirm("Bạn có thực sự muốn xóa mã giảm giá này không?")) {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/coupons/${couponId}`,
+          {
+            method: "DELETE",
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Error deleting coupon");
         }
-      );
-      if (!response.ok) {
-        throw new Error("Error deleting coupon");
+        setCouponList(couponList.filter((item) => item._id !== couponId));
+        alert("Xóa mã giảm giá thành công");
+      } catch (error) {
+        console.error("Error deleting coupon:", error);
+        alert("Xóa mã giảm giá thất bại");
       }
-      setCouponList(couponList.filter((item) => item._id !== couponId));
-      setMessage({ type: "success", content: "Xóa mã giảm giá thành công" });
-    } catch (error) {
-      console.error("Error deleting coupon:", error);
-      setMessage({ type: "error", content: "Có lỗi khi xóa mã giảm giá" });
     }
   };
 
@@ -125,10 +127,10 @@ const CouponAdminPage = () => {
         expirationDate: "",
         _id: null,
       });
-      setMessage({ type: "success", content: "Thêm mã giảm giá thành công" });
+      alert("Thêm mã giảm giá thành công");
     } catch (error) {
       console.error("Error adding coupon:", error);
-      setMessage({ type: "error", content: "Có lỗi khi thêm mã giảm giá" });
+      alert("Thêm mã giảm giá thất bại");
     }
   };
 
@@ -185,13 +187,10 @@ const CouponAdminPage = () => {
         expirationDate: "",
         _id: null,
       });
-      setMessage({
-        type: "success",
-        content: "Cập nhật mã giảm giá thành công",
-      });
+      alert("Cập nhật mã giảm giá thành công");
     } catch (error) {
       console.error("Error updating coupon:", error);
-      setMessage({ type: "error", content: "Có lỗi khi cập nhật mã giảm giá" });
+      alert("Thêm mã giảm giá thất bại");
     }
   };
 

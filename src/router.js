@@ -22,7 +22,7 @@ import NewsAdminPage from "pages/admin/newsPage";
 import NewsPage from "pages/users/newsPage";
 import CouponAdminPage from "pages/admin/couponPage";
 import DashboardPage from "pages/admin/dashboardPage";
-import RequireAdmin from "./component/Admin/requireAdmin"
+import StorePage from "pages/users/storePage";
 
 const renderUserRouter = () => {
   const userRouters = [
@@ -74,6 +74,10 @@ const renderUserRouter = () => {
       path: ROUTER.USER.NEWS,
       component: <NewsPage />,
     },
+    {
+      path: ROUTER.USER.STORE,
+      component: <StorePage />,
+    },
   ];
 
   return (
@@ -124,7 +128,7 @@ const renderAdminRouter = () => {
   ];
 
   return (
- <MasterAdLayout>
+    <MasterAdLayout>
       <Routes>
         {adminRouters.map((item, key) => (
           <Route key={key} path={item.path} element={item.component} />

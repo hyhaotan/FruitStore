@@ -1,8 +1,31 @@
 const Product = require("../models/product");
 
-const getProduct = async (req, res) => {
+// const getProduct = async (req, res) => {
+//   try {
+//     const products = await Product.find();
+//     res.json(products);
+//   } catch (err) {
+//     res.status(500).json({ message: err.message });
+//   }
+// };
+
+
+const getProducts = async (req, res) => {
   try {
-    const products = await Product.find();
+    const filter = {};
+
+    if (req.query.category) {
+      filter.type = req.query.category;
+    }
+    
+    if (req.query.minPrice) {
+      filter.price = { ...filter.price, $gte: Number(req.query.minPrice) };
+    }
+    if (req.query.maxPrice) {
+      filter.price = { ...filter.price, $lte: Number(req.query.maxPrice) };
+    }
+
+    const products = await Product.find(filter);
     res.json(products);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -183,7 +206,7 @@ const applyPriceProduct = async (req, res) => {
 };
 
 module.exports = {
-  getProduct,
+  // getProduct,
   getProductDetails,
   updateProduct,
   deleteProduct,
@@ -191,4 +214,5 @@ module.exports = {
   findProducts,
   getTypeProducts,
   applyPriceProduct,
+  getProducts,
 };

@@ -1,3 +1,4 @@
+
 export const ADMIN_PATH = "/quan-tri";
 
 export const ROUTER = {
@@ -14,6 +15,7 @@ export const ROUTER = {
     CONTACT: "/lien-he",
     ARTICLE: "/bai-viet",
     NEWS: "/news/:id",
+    STORE: "/cua-hang",
   },
 
   ADMIN: {

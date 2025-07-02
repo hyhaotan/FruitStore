@@ -175,6 +175,9 @@ const ArticlePage = () => {
               )}
               <h2>{article.title}</h2>
               <p className="author">Tên: {article.name}</p>
+              <p className="date">
+                Đăng ngày: {new Date(article.createdAt).toLocaleString()}
+              </p>
               <p className="content">{article.content}</p>
             </div>
           ))}

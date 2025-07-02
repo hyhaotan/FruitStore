@@ -1,6 +1,6 @@
 const express = require("express");
 const {
-  getProduct,
+  // getProduct,
   getProductDetails,
   createProduct,
   deleteProduct,
@@ -8,10 +8,12 @@ const {
   findProducts,
   getTypeProducts,
   applyPriceProduct,
+  getProducts,
 } = require("../controllers/product");
 
 const router = express.Router();
-router.get("/api/products", getProduct);
+// router.get("/api/products", getProduct);
+router.get("/api/products", getProducts);
 router.get("/api/products/:id", getProductDetails);
 router.post("/api/products", createProduct);
 router.put("/api/products/:id", updateProduct);

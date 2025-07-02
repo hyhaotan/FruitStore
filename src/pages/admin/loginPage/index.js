@@ -24,15 +24,12 @@ const LoginAdPage = () => {
       const { message, user } = await response.json();
 
       if (!response.ok) {
-        // Nếu server trả về lỗi (401, 500, ...)
         alert(message || "Đăng nhập thất bại");
         return;
       }
 
       // Kiểm tra quyền
       if (user && (user.role === "admin" || user.role === "employee")) {
-        // Lưu token hoặc session nếu cần
-        // localStorage.setItem('token', result.token);
         alert("đăng nhập thành công")
         navigate(ROUTER.ADMIN.ORDERS);
       } else {

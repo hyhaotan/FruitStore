@@ -36,18 +36,20 @@ const NewsAdminPage = () => {
   }, []);
 
   const handleDelete = async (newsId) => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/news/${newsId}`, {
-        method: "DELETE",
-      });
-      if (!response.ok) {
-        throw new Error("Error deleting news");
+    if (window.confirm("Bạn có thực sự muốn xóa tin tức này không?")) {
+      try {
+        const response = await fetch(`http://localhost:5000/api/news/${newsId}`, {
+          method: "DELETE",
+        });
+        if (!response.ok) {
+          throw new Error("Error deleting news");
+        }
+        setNewsList(newsList.filter((item) => item._id !== newsId));
+        alert("Xóa sản phẩm thành công");
+      } catch (error) {
+        console.error("Error deleting news:", error);
+        alert("Xóa sản phẩm thất bại");
       }
-      setNewsList(newsList.filter((item) => item._id !== newsId));
-      setMessage({ type: "success", content: "Xóa tin tức thành công" });
-    } catch (error) {
-      console.error("Error deleting news:", error);
-      setMessage({ type: "error", content: "Có lỗi khi xóa tin tức" });
     }
   };
 
@@ -82,10 +84,10 @@ const NewsAdminPage = () => {
       setNewsList([...newsList, newNews]);
       setIsAddModalOpen(false);
       setFormData({ title: "", content: "", image: null, _id: null });
-      setMessage({ type: "success", content: "Thêm tin tức thành công" });
+      alert("Thêm tin tức thành công");
     } catch (error) {
       console.error("Error adding news:", error);
-      setMessage({ type: "error", content: "Có lỗi khi thêm tin tức" });
+      alert("Thêm tin tức thất bại");
     }
   };
 
@@ -136,10 +138,9 @@ const NewsAdminPage = () => {
       setNewsList(updatedNewsList);
       setIsEditModalOpen(false);
       setFormData({ title: "", content: "", image: null, _id: null });
-      setMessage({ type: "success", content: "Cập nhật tin tức thành công" });
+      alert("Cập nhật tin tức thành công");
     } catch (error) {
       console.error("Error updating news:", error);
-      setMessage({ type: "error", content: "Có lỗi khi cập nhật tin tức" });
     }
   };
 

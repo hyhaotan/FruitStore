@@ -59,18 +59,20 @@ const ProductManagement = () => {
 
   // Xóa sản phẩm
   const handleDelete = async (id) => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/products/${id}`, {
-        method: "DELETE",
-      });
-      if (!response.ok) {
-        throw new Error("Error deleting product");
+    if (window.confirm("Bạn có thực sự muốn xóa sản phẩm này không?")) {
+      try {
+        const response = await fetch(`http://localhost:5000/api/products/${id}`, {
+          method: "DELETE",
+        });
+        if (!response.ok) {
+          throw new Error("Error deleting product");
+        }
+        setProducts((prevProducts) =>
+          prevProducts.filter((product) => product._id !== id)
+        );
+      } catch (error) {
+        console.error("Error deleting product:", error);
       }
-      setProducts((prevProducts) =>
-        prevProducts.filter((product) => product._id !== id)
-      );
-    } catch (error) {
-      console.error("Error deleting product:", error);
     }
   };
 
@@ -102,6 +104,7 @@ const ProductManagement = () => {
             body: JSON.stringify(productForm),
           }
         );
+        alert("Lưu sản phẩm thành công");
       } else {
         response = await fetch("http://localhost:5000/api/products", {
           method: "POST",

@@ -23,7 +23,7 @@ const UserTable = () => {
   }, []);
 
   const handleDelete = async (userId) => {
-    if (window.confirm("Bạn có chắc là muốn xóa người dùng này không?")) {
+    if (window.confirm("Bạn có chắc là muốn xóa tài khoản này không?")) {
       try {
         const response = await fetch(
           `http://localhost:5000/api/users/${userId}`,
@@ -33,6 +33,7 @@ const UserTable = () => {
           throw new Error("Error deleting user");
         }
         setUsers(prev => prev.filter(user => user._id !== userId));
+        alert("Xóa sản phẩm thành công");
       } catch (error) {
         console.error("Error deleting user:", error);
       }

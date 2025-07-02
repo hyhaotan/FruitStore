@@ -40,7 +40,7 @@ const Header = () => {
   const [isShowCategories, setShowCategories] = useState(isHome);
   const [menus, setMenus] = useState([
     { name: "Trang chủ", path: ROUTER.USER.HOME },
-    { name: "Cửa hàng", path: ROUTER.USER.PRODUCTS },
+    { name: "Cửa hàng", path: ROUTER.USER.STORE },
     {
       name: "Sản phẩm",
       path: "#",

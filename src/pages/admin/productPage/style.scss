@@ -249,3 +249,37 @@
     }
   }
 }
+
+.col-lg-9.d-flex {
+  display: flex;
+  flex-direction: column;
+}
+.products-content {
+  /* Đặt min-height bằng 3 hàng sản phẩm (3 rows * khoảng cao mỗi row) */
+  min-height: 600px; /* điều chỉnh giá trị cho phù hợp với layout */
+  display: flex;
+  flex-direction: column;
+}
+.pagination-container {
+  margin-top: auto;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  padding: 10px 0;
+  background: #fff;
+}
+.pagination .page-item {
+  margin: 0 5px;
+  padding: 8px 12px;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+.pagination .page-item.active {
+  background: #11a9e6;
+  color: #fff;
+  border-color: #11a9e6;
+}
+
+

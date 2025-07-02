@@ -31,22 +31,24 @@ const ArticleAdminPage = () => {
 
   // Hàm xóa bài viết
   const handleDelete = async (articleId) => {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/api/articles/${articleId}`,
-        {
-          method: "DELETE",
+    if (window.confirm("Bạn có thực sự muốn xóa bài viết này không?")) {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/articles/${articleId}`,
+          {
+            method: "DELETE",
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Error deleting article");
         }
-      );
-      if (!response.ok) {
-        throw new Error("Error deleting article");
+        // Cập nhật lại danh sách sau khi xóa thành công
+        setArticles((prevArticles) =>
+          prevArticles.filter((article) => article._id !== articleId)
+        );
+      } catch (error) {
+        console.error("Error deleting article:", error);
       }
-      // Cập nhật lại danh sách sau khi xóa thành công
-      setArticles((prevArticles) =>
-        prevArticles.filter((article) => article._id !== articleId)
-      );
-    } catch (error) {
-      console.error("Error deleting article:", error);
     }
   };
 

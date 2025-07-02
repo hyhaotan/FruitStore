@@ -11,7 +11,9 @@ import SearchComponent from "component/Search";
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
-  const [sortBy, setSortBy] = useState(""); // Giá thấp->cao, cao->thấp
+  const [sortBy, setSortBy] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 9;
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -29,20 +31,21 @@ const ProductsPage = () => {
     "Giảm giá",
   ];
 
-  // Lấy danh sách sản phẩm theo loại
+  // Fetch sản phẩm theo loại
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get("http://localhost:5000/api/products", {
-          params: productType ? { type: productType } : {},
+          params: productType ? { category: productType } : {},
         });
         setProducts(response.data);
+        setCurrentPage(1);
       } catch (error) {
         console.error("Failed to fetch products:", error);
       }
     };
     fetchProducts();
-    setSortBy(""); // reset sort khi đổi category
+    setSortBy("");
   }, [productType]);
 
   // Lọc theo giá
@@ -51,10 +54,15 @@ const ProductsPage = () => {
       const min = document.getElementById("minPrice").value;
       const max = document.getElementById("maxPrice").value;
       const response = await axios.get("http://localhost:5000/api/products", {
-        params: { minPrice: min, maxPrice: max, ...(productType && { type: productType }) },
+        params: {
+          ...(productType && { category: productType }),
+          minPrice: min,
+          maxPrice: max,
+        },
       });
       setProducts(response.data);
       setSortBy("");
+      setCurrentPage(1);
     } catch (error) {
       console.error("Price filter failed:", error);
     }
@@ -73,15 +81,21 @@ const ProductsPage = () => {
         return list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       case "Cũ đến mới":
         return list.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-      // TODO: Bán chạy nhất, Giảm giá nếu có dữ liệu
       default:
         return list;
     }
   }, [products, sortBy]);
 
+  // Pagination
+  const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
+  const paginatedProducts = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    return sortedProducts.slice(start, start + itemsPerPage);
+  }, [sortedProducts, currentPage]);
+
   const renderProducts = () => (
     <div className="row">
-      {sortedProducts.map((item) => (
+      {paginatedProducts.map((item) => (
         <div className="col-lg-4 col-md-4 col-sm-6 col-xs-12" key={item._id}>
           <ProductCard
             id={item._id}
@@ -90,6 +104,20 @@ const ProductsPage = () => {
             price={item.price}
           />
         </div>
+      ))}
+    </div>
+  );
+
+  const renderPagination = () => (
+    <div className="pagination">
+      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+        <span
+          key={page}
+          className={`page-item ${currentPage === page ? 'active' : ''}`}
+          onClick={() => setCurrentPage(page)}
+        >
+          {page}
+        </span>
       ))}
     </div>
   );
@@ -152,8 +180,11 @@ const ProductsPage = () => {
           </div>
 
           {/* Danh sách sản phẩm */}
-          <div className="col-lg-9 col-md-12 col-sm-12 col-xs-12">
-            {renderProducts()}
+          <div className="col-lg-9 col-md-12 col-sm-12 col-xs-12 d-flex flex-column">
+            <div className="flex-grow-1 products-content">
+              {renderProducts()}
+            </div>
+            {totalPages > 1 && <div className="pagination-container">{renderPagination()}</div>}
           </div>
         </div>
       </div>
