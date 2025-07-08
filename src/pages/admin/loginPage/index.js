@@ -21,7 +21,10 @@ const LoginAdPage = () => {
         body: JSON.stringify({ email, password }),
       });
 
-      const { message, user } = await response.json();
+      const data = await response.json();
+      console.log('API response:', data);
+      const { message, user } = data;
+      console.log('User:', user);
 
       if (!response.ok) {
         alert(message || "Đăng nhập thất bại");
@@ -30,8 +33,17 @@ const LoginAdPage = () => {
 
       // Kiểm tra quyền
       if (user && (user.role === "admin" || user.role === "employee")) {
-        alert("đăng nhập thành công")
+        if (user.token) {
+          localStorage.setItem('token', user.token);
+          console.log('Token đã lưu vào localStorage:', user.token);
+        } else {
+          console.warn('Không có token trong user object!');
+        }
+        console.log("Chuyển trang tới:", ROUTER.ADMIN.ORDERS);
         navigate(ROUTER.ADMIN.ORDERS);
+        setTimeout(() => {
+          alert("đăng nhập thành công");
+        }, 100);
       } else {
         alert("Bạn không có quyền truy cập");
       }

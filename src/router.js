@@ -23,6 +23,7 @@ import NewsPage from "pages/users/newsPage";
 import CouponAdminPage from "pages/admin/couponPage";
 import DashboardPage from "pages/admin/dashboardPage";
 import StorePage from "pages/users/storePage";
+import RequireAdmin from "component/Admin/requireAdmin";
 
 const renderUserRouter = () => {
   const userRouters = [
@@ -99,31 +100,31 @@ const renderAdminRouter = () => {
     },
     {
       path: ROUTER.ADMIN.ORDERS,
-      component: <OrderPageAdPage />,
+      component: <RequireAdmin><OrderPageAdPage /></RequireAdmin>,
     },
     {
       path: ROUTER.ADMIN.PRODUCTS,
-      component: <ProductPage />,
+      component: <RequireAdmin><ProductPage /></RequireAdmin>,
     },
     {
       path: ROUTER.ADMIN.ACCOUNT,
-      component: <AccountPage />,
+      component: <RequireAdmin><AccountPage /></RequireAdmin>,
     },
     {
       path: ROUTER.ADMIN.NEWS,
-      component: <NewsAdminPage />,
+      component: <RequireAdmin><NewsAdminPage /></RequireAdmin>,
     },
     {
       path: ROUTER.ADMIN.COUPON,
-      component: <CouponAdminPage />,
+      component: <RequireAdmin><CouponAdminPage /></RequireAdmin>,
     },
     {
       path: ROUTER.ADMIN.ARTICLES,
-      component: <ArticleAdminPage />,
+      component: <RequireAdmin><ArticleAdminPage /></RequireAdmin>,
     },
     {
       path: ROUTER.ADMIN.DASHBOARD,
-      component: <DashboardPage />,
+      component: <RequireAdmin><DashboardPage /></RequireAdmin>,
     },
   ];
 

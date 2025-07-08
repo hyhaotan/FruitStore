@@ -56,7 +56,25 @@ const loginUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    return res.status(200).json({ user });
+    // Tạo token JWT cho cả user và admin
+    const token = jwt.sign(
+      {
+        _id: user._id,
+        email: user.email,
+        role: user.role
+      },
+      process.env.JWT_SECRET || 'secret-key',
+      { expiresIn: '2h' }
+    );
+    return res.status(200).json({
+      user: {
+        _id: user._id,
+        email: user.email,
+        username: user.username,
+        role: user.role,
+        token // trả về token cho frontend
+      }
+    });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -75,13 +93,23 @@ const loginAdmin = async (req, res) => {
         message: "Email/mật khẩu không đúng hoặc bạn không có quyền truy cập"
       });
     }
-    // Nếu dùng JWT thì phát token ở đây
-    return res.status(200).json({
-      message: "Đăng nhập thành công",
-      user: { 
+    // Tạo token JWT
+    const token = jwt.sign(
+      {
         _id: adminUser._id,
         email: adminUser.email,
         role: adminUser.role
+      },
+      process.env.JWT_SECRET || 'secret-key',
+      { expiresIn: '2h' }
+    );
+    return res.status(200).json({
+      message: "Đăng nhập thành công",
+      user: {
+        _id: adminUser._id,
+        email: adminUser.email,
+        role: adminUser.role,
+        token // trả về token cho frontend
       }
     });
   } catch (error) {
@@ -198,6 +226,25 @@ const editRole = async (req, res) => {
   }
 };
 
+// Middleware xác thực JWT và kiểm tra quyền admin
+const adminAuth = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ message: 'Bạn chưa đăng nhập!' });
+  }
+  const token = authHeader.split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret-key');
+    if (decoded.role !== 'admin' && decoded.role !== 'employee') {
+      return res.status(403).json({ message: 'Bạn không có quyền truy cập!' });
+    }
+    req.user = decoded;
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: 'Token không hợp lệ!' });
+  }
+};
+
 module.exports = {
   loginUser,
   registerUser,
@@ -209,4 +256,5 @@ module.exports = {
   deleteUser,
   editRole,
   loginAdmin,
+  adminAuth, // export middleware mới
 };
